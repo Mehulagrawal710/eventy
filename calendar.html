@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Calendar</title>
+	<meta charset="utf-8">
+	<!--Bootstrap-->
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<!--AngularJS-->
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+
+<style>
+.day{border: 1px solid black;
+	  height: 100px;
+	  width: 100px;
+	  float: left;}
+.today{background-color: lightgreen;}	  
+
+.day:hover{background-color: powderblue;}	  	
+
+</style>
+
+</head>
+<body ng-app="myApp" ng-controller="ctrl" class="container" style="background-color: #eee;">
+
+	<h1 align="center">Calendar</h1>
+	
+	<button ng-click="decrement_month()"><<</button>
+	<span>month</span>
+	<button ng-click="increment_month()">>></button>
+	<h2>{{months[current_month].month}}</h2>
+	
+
+
+	<div>
+		<div ng-repeat="i in get_days_array(current_month)">
+			<div class="day" ng-if="i!=current_date">
+				<h3>{{i}}</h3>
+				<span ng-mouseenter="hover='true'" ng-mouseleave="hover='false'" ng-if="hover">Add Event</span>
+			</div>
+				<div class="day today" ng-if="i==current_date && current_month==month">
+				<h3>{{i}}</h3>
+				<span ng-if="hover">Add Event</span>
+			</div>
+		</div>
+	</div>
+
+<script>
+var app = angular.module('myApp', []);
+app.controller('ctrl', function ($scope) {
+
+	date = new Date();
+	$scope.current_date = date.getDate();
+	$scope.current_day = date.getDay();
+	$scope.month = date.getMonth();
+	$scope.current_year = date.getFullYear();
+
+	$scope.current_month = $scope.month;
+
+    $scope.months = [
+    	{month:'january', no_of_days:31},
+    	{month:'february', no_of_days:28},
+    	{month:'march', no_of_days:31},
+    	{month:'april', no_of_days:30},
+    	{month:'may', no_of_days:31},
+    	{month:'june', no_of_days:30},
+    	{month:'july', no_of_days:31},
+    	{month:'august', no_of_days:31},
+    	{month:'september', no_of_days:30},
+    	{month:'october', no_of_days:31},
+    	{month:'november', no_of_days:30},
+    	{month:'december', no_of_days:31}
+    ];
+
+    $scope.increment_month = function(){
+    	if ($scope.current_month !=11) {
+    			$scope.current_month +=1;
+    	}
+    }
+
+    $scope.decrement_month = function(){
+    	if ($scope.current_month !=0) {
+    			$scope.current_month -=1;
+    	}	
+    }
+
+    $scope.get_days_array = function(n){
+    	$scope.days_array = [];
+    	for(x=1; x<=$scope.months[n].no_of_days; x++){
+    		$scope.days_array.push(x);
+    	}
+    	return $scope.days_array;
+    }
+
+});
+</script>
+
+</body>
+</html>
