@@ -42,12 +42,45 @@ body{background-repeat: no-repeat;
 .day:hover{background-color: powderblue;
 		   color: #000;}	  	
 
-.addevent{height: 80%;
+.event_hr{background-color: gray;
+	      height: 3px;
+	      border:0;
+	      margin-top: -5px;}
+
+.event_hr_green{background-color: #dc3545;}
+
+.blackfade{height: 100vh;
+		   width: 100vw;
+		   position: fixed;
+		   top: 0;
+		   left: 0;
+		   transition: all 200ms ease-in-out;
+		   background-color: rgba(0,0,0,0.6);}
+
+.addevent{height: 0;
+		  width: 0;
+		  position: fixed;
+		  top:50%;
+		  left:50%;
+		  z-index: -1;
+		  transition: all 200ms ease-in-out;}
+
+.addevent_clicked{border-radius: 20px;
+		  height: 80%;
 		  width: 40%;
 		  position: fixed;
 		  top: 10%;
 		  left: 30%;
-		  background-color: rgba(255,255,255,1);}
+		  z-index: 0;
+		  background-color: rgba(255,255,255,1);
+		  transform: translate(0,0);
+		  transition: all 200ms ease-in-out;}
+
+.content{opacity: 0; 
+	  transition: all 100ms ease-in-out;}
+.content_clicked{opacity: 1;
+			  transition: all 500ms ease-in-out;}
+
 	
 </style>
 
@@ -55,6 +88,7 @@ body{background-repeat: no-repeat;
 <body ng-app="myApp" ng-style="{'background-image': 'url(' + months[current_month].bgimg + ')'}" ng-controller="ctrl">
 	
 	<div align="center" id="heading">My Calendar</div>
+
 	<div class="container" id="calendar">
 		
 		<button ng-click="decrement_year()" class="btn btn-sm btn-info"><<</button>
@@ -73,31 +107,42 @@ body{background-repeat: no-repeat;
 				<div class="day" ng-click="add_event(i)" ng-class="{today: i==current_date && current_month==month && current_year == year}">
 					<h3>{{i}}</h3>
 					<h4>{{weekdays[weekday(i)]}}</h4>
+					<hr class="event_hr" ng-class="{event_hr_green: event_exist(i)}">
 				</div>
 			</div>
 		</div>
-		
-
-		<div class="addevent" ng-if="open_add_event==1">
-			<div class="container">
+		<p style="margin-top: 100px;margin-bottom:-20px; float: right;">*click on a date to add event</p>
+	</div>	
+	
+	<div ng-class="{blackfade: open_add_event==1}">
+		<div class="addevent" ng-class="{addevent_clicked: open_add_event==1}">
+			<div class="container content" ng-class="{content_clicked: open_add_event==1}">
+				<h2>Add Event for:</h2>
 				<h1>{{add_event_date}}</h1>
-				<h2>Add Event</h2>
+				<br><br>
 				<h3>Event Title:</h3>
-				<input ng-model="event_title">
+				<input ng-model="event_title" style="border: 0;border-bottom: 2px solid lightblue;">
 				<br>
 				<h3>Event Description:</h3>
-				<input ng-model="event_description">
-				<button ng-click="add_this_event(event_title, event_description)">Add Event</button>
-				<button ng-click="close_add_event()">close</button>
+				<input ng-model="event_description" style="border: 0;border-bottom: 2px solid lightblue;">
+				<br><br><br><br><br>
+				<button ng-click="add_this_event(event_title, event_description)" style="margin-left: 130px;" class="btn btn-lg btn-success">Add Event</button>
+				<button ng-click="close_add_event()" style="margin-left: 20px;" class="btn btn-lg btn-danger">close</button>
 			</div>
 		</div>
-
-		<div class="addevent" ng-if="show_all_event==1">
-			<div class="container">
+	</div>	
+	
+	<div ng-class="{blackfade: show_all_event==1}">
+		<div class="addevent" ng-class="{addevent_clicked: show_all_event==1}">
+			<div class="container content" ng-class="{content_clicked: show_all_event==1}">
 				<div ng-repeat="event in events">
-					<p>{{event.d}} {{months[event.m].month}} {{event.y}} {{event.t}} {{event.desc}}</p>
+					<span style="font-size: 50px;">{{event.t}}</span>
+					<span style="font-size: 20px;margin-left: 30px;">{{event.d}}, {{months[event.m].month}}, {{event.y}}</span>
+					<br>
+					<p style="width: 500px;">{{event.desc}}</p>
+					<br><br>
 				</div>
-				<button ng-click="close_all_event_page()">close</button>
+				<button ng-click="close_all_event_page()" class="btn btn-lg btn-danger">close</button>
 			</div>
 		</div>
 	</div>
@@ -209,7 +254,9 @@ app.controller('ctrl', function ($scope) {
     }
     
     $scope.close_add_event = function(){
-    	$scope.open_add_event = 0;	
+    	$scope.open_add_event = 0;
+    	$scope.event_title = "";
+    	$scope.event_description = "";	
     }
     
     $scope.add_this_event = function(title, description){
@@ -233,6 +280,16 @@ app.controller('ctrl', function ($scope) {
     $scope.close_all_event_page = function(){
     	$scope.show_all_event = 0;
     }
+
+    $scope.event_exist = function(date){
+    	for(var i=0; i<$scope.events.length; i++){
+    		if(date == $scope.events[i].d && $scope.current_month == $scope.events[i].m && $scope.current_year == $scope.events[i].y){
+    			return true;
+    		}
+    	}
+    	return false;
+    }
+
 
 });
 </script>
