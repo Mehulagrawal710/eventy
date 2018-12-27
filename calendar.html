@@ -14,17 +14,33 @@
 
 <style>
 
-body{background-image: url(https://www.plannthat.com/wp-content/uploads/2018/10/christmas-marketing-plan.jpeg);
-	 background-repeat: no-repeat;x
+body{background-repeat: no-repeat;
 	 background-size: 100% auto;}
 
-.day{border: 1px solid black;
-	  height: 100px;
-	  width: 100px;
-	  float: left;}
-.today{background-color: lightgreen;}	  
+#heading{font-size: 80px;
+		 width: 300px;
+		 margin: 0 auto;
+		 color: #000; 
+		 font-family: freestyle script;}
 
-.day:hover{background-color: powderblue;}	  	
+#calendar{background-color: rgba(0,0,0,0.5);
+		  color: #eee;
+		  padding: 20px;
+		  border: 5px solid #000;
+		  border-radius: 20px;}
+
+.day{border: 0px solid black;
+	 border-radius: 10px;
+	 padding: 10px;
+	 height: 100px;
+	 width: 100px;
+	 float: left;}
+
+.today{background-color: lightgreen;
+	   color: #000;}	  
+
+.day:hover{background-color: powderblue;
+		   color: #000;}	  	
 
 .addevent{height: 80%;
 		  width: 40%;
@@ -36,57 +52,55 @@ body{background-image: url(https://www.plannthat.com/wp-content/uploads/2018/10/
 </style>
 
 </head>
-<body ng-app="myApp" ng-controller="ctrl" class="container" style="background-color: #eee;">
-
-	<h1 align="center">Calendar</h1>
+<body ng-app="myApp" ng-style="{'background-image': 'url(' + months[current_month].bgimg + ')'}" ng-controller="ctrl">
 	
-	<button ng-click="decrement_year()"><<</button>
-	<span>year</span>
-	<button ng-click="increment_year()">>></button>
-	<br><br>
-	<button ng-click="decrement_month()"><<</button>
-	<span>month</span>
-	<button ng-click="increment_month()">>></button>
-	<button ng-click="today()">today</button>
-	<button ng-click="show_all_event_page()">all events</button>
-	<h2>{{months[current_month].month}}, {{current_year}}</h2>
-	
+	<div align="center" id="heading">My Calendar</div>
+	<div class="container" id="calendar">
+		
+		<button ng-click="decrement_year()" class="btn btn-sm btn-info"><<</button>
+		<span>year</span>
+		<button ng-click="increment_year()" class="btn btn-sm btn-info">>></button>
+		
+		<button ng-click="decrement_month()" class="btn btn-sm btn-info"><<</button>
+		<span>month</span>
+		<button ng-click="increment_month()" class="btn btn-sm btn-info">>></button>
+		<button ng-click="show_all_event_page()" style="float: right;" class="btn btn-md btn-success">all events</button>
+		<button ng-click="today()" style="float: right;margin-right: 5px;" class="btn btn-md btn-success">today</button>
+		<h2>{{months[current_month].month}}, {{current_year}}</h2>
+		<hr>
+		<div>
+			<div ng-repeat="i in get_days_array(current_month)">
+				<div class="day" ng-click="add_event(i)" ng-class="{today: i==current_date && current_month==month && current_year == year}">
+					<h3>{{i}}</h3>
+					<h4>{{weekdays[weekday(i)]}}</h4>
+				</div>
+			</div>
+		</div>
+		
 
+		<div class="addevent" ng-if="open_add_event==1">
+			<div class="container">
+				<h1>{{add_event_date}}</h1>
+				<h2>Add Event</h2>
+				<h3>Event Title:</h3>
+				<input ng-model="event_title">
+				<br>
+				<h3>Event Description:</h3>
+				<input ng-model="event_description">
+				<button ng-click="add_this_event(event_title, event_description)">Add Event</button>
+				<button ng-click="close_add_event()">close</button>
+			</div>
+		</div>
 
-	<div>
-		<div ng-repeat="i in get_days_array(current_month)">
-			<div class="day" ng-click="add_event(i)" ng-class="{today: i==current_date && current_month==month && current_year == year}">
-				<h3>{{i}}</h3>
-				<h4>{{weekdays[weekday(i)]}}</h4>
+		<div class="addevent" ng-if="show_all_event==1">
+			<div class="container">
+				<div ng-repeat="event in events">
+					<p>{{event.d}} {{months[event.m].month}} {{event.y}} {{event.t}} {{event.desc}}</p>
+				</div>
+				<button ng-click="close_all_event_page()">close</button>
 			</div>
 		</div>
 	</div>
-	
-
-	<div class="addevent" ng-if="open_add_event==1">
-		<div class="container">
-			<h1>{{add_event_date}}</h1>
-			<h2>Add Event</h2>
-			<h3>Event Title:</h3>
-			<input ng-model="event_title">
-			<br>
-			<h3>Event Description:</h3>
-			<input ng-model="event_description">
-			<button ng-click="add_this_event(event_title, event_description)">Add Event</button>
-			<button ng-click="close_add_event()">close</button>
-		</div>
-	</div>
-
-	<div class="addevent" ng-if="show_all_event==1">
-		<div class="container">
-			<div ng-repeat="event in events">
-				<p>{{event.d}} {{months[event.m].month}} {{event.y}} {{event.t}} {{event.desc}}</p>
-			</div>
-			<button ng-click="close_all_event_page()">close</button>
-		</div>
-	</div>
-
-
 
 <script>
 var app = angular.module('myApp', []);
@@ -111,24 +125,22 @@ app.controller('ctrl', function ($scope) {
 		$scope.current_month = $scope.month;
 	}
 
-	
-
-    $scope.months = [
-    	{month:'january', no_of_days:31},
-    	{month:'february', no_of_days:28},
-    	{month:'march', no_of_days:31},
-    	{month:'april', no_of_days:30},
-    	{month:'may', no_of_days:31},
-    	{month:'june', no_of_days:30},
-    	{month:'july', no_of_days:31},
-    	{month:'august', no_of_days:31},
-    	{month:'september', no_of_days:30},
-    	{month:'october', no_of_days:31},
-    	{month:'november', no_of_days:30},
-    	{month:'december', no_of_days:31}
+	$scope.months = [
+    	{month:'January', no_of_days:31, bgimg:"http://apps.rixos.com/Repo/List/2026-20171025-0b8450f4-caae-4bd4-be14-f9c05418f6d0.jpg"},
+    	{month:'February', no_of_days:28, bgimg:"https://static1.squarespace.com/static/55b43a79e4b0e6e72561f70a/5b885064562fa784c87cb9ce/5b88508e8a922d156a7bf612/1535660263436/cabin_AL_3.jpg?format=1000w"},
+    	{month:'March', no_of_days:31, bgimg:"http://profilepicturesdp.com/wp-content/uploads/2018/06/colours-dp-10.jpg"},
+    	{month:'April', no_of_days:30, bgimg:"https://static.vecteezy.com/system/resources/previews/000/117/397/original/free-summer-beach-vector-illustration.jpg"},
+    	{month:'May', no_of_days:31, bgimg:"https://static.vecteezy.com/system/resources/previews/000/117/397/original/free-summer-beach-vector-illustration.jpg"},
+    	{month:'June', no_of_days:30, bgimg:"https://maxcdn.icons8.com/app/uploads/2018/07/elegant-digital-illustration-1200x794.png"},
+    	{month:'July', no_of_days:31, bgimg:"https://maxcdn.icons8.com/app/uploads/2018/07/elegant-digital-illustration-1200x794.png"},
+    	{month:'August', no_of_days:31, bgimg:"https://i.pinimg.com/originals/a8/b7/27/a8b72709ef03648d9ad893def67f2473.jpg"},
+    	{month:'September', no_of_days:30, bgimg:"https://i.pinimg.com/originals/a8/b7/27/a8b72709ef03648d9ad893def67f2473.jpg"},
+    	{month:'October', no_of_days:31, bgimg:"https://www.thisiscolossal.com/wp-content/uploads/2018/06/mercadante-1.jpg"},
+    	{month:'November', no_of_days:30, bgimg:"https://blogmedia.evbstatic.com/wp-content/uploads/wpmulti/sites/3/2016/10/19171356/new-years-eve1.jpg"},
+    	{month:'December', no_of_days:31, bgimg:"https://www.plannthat.com/wp-content/uploads/2018/10/christmas-marketing-plan.jpeg"}
     ];
 
-    $scope.weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    $scope.weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
     $scope.events = [];
 
@@ -161,7 +173,7 @@ app.controller('ctrl', function ($scope) {
     	else{
     		$scope.current_year -=1;
     		$scope.current_month = 11;
-    	}	
+    	}
     }
 
     $scope.get_days_array = function(n){
@@ -171,9 +183,7 @@ app.controller('ctrl', function ($scope) {
     	}
     	return $scope.days_array;
     }
-    //k is the date, m is month march is 1 and feb is 12, d is last two digits of year and one minus if it is jan or feb, c is first two digits of the year
     
-
     zellers_month = [11,12,1,2,3,4,5,6,7,8,9,10];
 
     $scope.weekday = function(i){
@@ -191,14 +201,17 @@ app.controller('ctrl', function ($scope) {
 
     $scope.open_add_event = 0;
     var event_date;
+    
     $scope.add_event = function(date){
 	    event_date = date;	
     	$scope.open_add_event = 1;
     	$scope.add_event_date = date+", "+$scope.months[$scope.current_month].month+", "+$scope.current_year;
     }
+    
     $scope.close_add_event = function(){
     	$scope.open_add_event = 0;	
     }
+    
     $scope.add_this_event = function(title, description){
     	$scope.events.push(
     		{
