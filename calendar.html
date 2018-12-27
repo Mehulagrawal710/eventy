@@ -28,25 +28,28 @@
 
 	<h1 align="center">Calendar</h1>
 	
+	<button ng-click="decrement_year()"><<</button>
+	<span>year</span>
+	<button ng-click="increment_year()">>></button>
+	<br><br>
 	<button ng-click="decrement_month()"><<</button>
 	<span>month</span>
 	<button ng-click="increment_month()">>></button>
-	<h2>{{months[current_month].month}}</h2>
+	<button ng-click="today()">today</button>
+	<h2>{{months[current_month].month}}, {{current_year}}</h2>
 	
 
 
 	<div>
 		<div ng-repeat="i in get_days_array(current_month)">
-			<div class="day" ng-if="i!=current_date">
+			<div class="day">
 				<h3>{{i}}</h3>
+				<h4>{{weekdays[weekday(i)]}}</h4>
 				<span ng-mouseenter="hover='true'" ng-mouseleave="hover='false'" ng-if="hover">Add Event</span>
-			</div>
-				<div class="day today" ng-if="i==current_date && current_month==month">
-				<h3>{{i}}</h3>
-				<span ng-if="hover">Add Event</span>
 			</div>
 		</div>
 	</div>
+	
 
 <script>
 var app = angular.module('myApp', []);
@@ -59,6 +62,17 @@ app.controller('ctrl', function ($scope) {
 	$scope.current_year = date.getFullYear();
 
 	$scope.current_month = $scope.month;
+	
+	$scope.today = function(){
+		$scope.current_date = date.getDate();
+		$scope.current_day = date.getDay();
+		$scope.month = date.getMonth();
+		$scope.current_year = date.getFullYear();
+
+		$scope.current_month = $scope.month;
+	}
+
+	
 
     $scope.months = [
     	{month:'january', no_of_days:31},
@@ -74,6 +88,20 @@ app.controller('ctrl', function ($scope) {
     	{month:'november', no_of_days:30},
     	{month:'december', no_of_days:31}
     ];
+
+    $scope.weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+
+    $scope.increment_year = function(){
+    	if ($scope.current_year !=3000) {
+    			$scope.current_year +=1;
+    	}
+    }
+
+    $scope.decrement_year = function(){
+    	if ($scope.current_year !=1900) {
+    			$scope.current_year -=1;
+    	}	
+    }
 
     $scope.increment_month = function(){
     	if ($scope.current_month !=11) {
@@ -94,6 +122,24 @@ app.controller('ctrl', function ($scope) {
     	}
     	return $scope.days_array;
     }
+    //k is the date, m is month march is 1 and feb is 12, d is last two digits of year and one minus if it is jan or feb, c is first two digits of the year
+    
+
+    zellers_month = [11,12,1,2,3,4,5,6,7,8,9,10];
+
+    $scope.weekday = function(i){
+    	k = i;
+    	m = zellers_month[$scope.current_month];
+    	d = ($scope.current_year)%100;
+    	c = Math.floor(($scope.current_year)/100);
+
+    	f = k + Math.floor((13*m-1)/5) + d + Math.floor(d/4) + Math.floor(c/4) - 2*c;
+    	rem = Math.floor(f%7);
+    	if(rem<0){index = rem + 7;}
+    	else{index = rem;}
+    	return index;
+    }
+
 
 });
 </script>
