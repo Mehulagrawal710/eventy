@@ -48,6 +48,7 @@ body{background-image: url(https://www.plannthat.com/wp-content/uploads/2018/10/
 	<span>month</span>
 	<button ng-click="increment_month()">>></button>
 	<button ng-click="today()">today</button>
+	<button ng-click="show_all_event_page()">all events</button>
 	<h2>{{months[current_month].month}}, {{current_year}}</h2>
 	
 
@@ -60,7 +61,8 @@ body{background-image: url(https://www.plannthat.com/wp-content/uploads/2018/10/
 			</div>
 		</div>
 	</div>
-	<p>{{hi}}</p>
+	
+
 	<div class="addevent" ng-if="open_add_event==1">
 		<div class="container">
 			<h1>{{add_event_date}}</h1>
@@ -70,11 +72,19 @@ body{background-image: url(https://www.plannthat.com/wp-content/uploads/2018/10/
 			<br>
 			<h3>Event Description:</h3>
 			<input ng-model="event_description">
-			<span ng-click="add_this_event(event_title, event_description)">Add Event</span>
-			<span ng-click="close_add_event()">close</span>
+			<button ng-click="add_this_event(event_title, event_description)">Add Event</button>
+			<button ng-click="close_add_event()">close</button>
 		</div>
 	</div>
 
+	<div class="addevent" ng-if="show_all_event==1">
+		<div class="container">
+			<div ng-repeat="event in events">
+				<p>{{event.d}} {{months[event.m].month}} {{event.y}} {{event.t}} {{event.desc}}</p>
+			</div>
+			<button ng-click="close_all_event_page()">close</button>
+		</div>
+	</div>
 
 
 
@@ -119,6 +129,8 @@ app.controller('ctrl', function ($scope) {
     ];
 
     $scope.weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+
+    $scope.events = [];
 
     $scope.increment_year = function(){
     	if ($scope.current_year !=3000) {
@@ -188,10 +200,26 @@ app.controller('ctrl', function ($scope) {
     	$scope.open_add_event = 0;	
     }
     $scope.add_this_event = function(title, description){
-    	$scope.hi = event_date+", "+$scope.months[$scope.current_month].month+", "+$scope.current_year+title+description;
+    	$scope.events.push(
+    		{
+    			d: event_date,
+    			m: $scope.current_month,
+    			y: $scope.current_year,
+    			t: title,
+    			desc: description
+    		}
+    	);
     }
 
+    $scope.show_all_event = 0;
 
+    $scope.show_all_event_page = function(){
+    	$scope.show_all_event = 1;
+    }
+
+    $scope.close_all_event_page = function(){
+    	$scope.show_all_event = 0;
+    }
 
 });
 </script>
