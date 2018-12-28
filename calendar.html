@@ -81,14 +81,16 @@ body{background-repeat: no-repeat;
 .content_clicked{opacity: 1;
 			  transition: all 500ms ease-in-out;}
 
-	
 </style>
 
 </head>
+
 <body ng-app="myApp" ng-style="{'background-image': 'url(' + months[current_month].bgimg + ')'}" ng-controller="ctrl">
 	
 	<div align="center" id="heading">My Calendar</div>
-
+	
+	<!--CALENDAR DATES SHOW UP HERE
+		==================================================================-->
 	<div class="container" id="calendar">
 		
 		<button ng-click="decrement_year()" class="btn btn-sm btn-info"><<</button>
@@ -112,8 +114,11 @@ body{background-repeat: no-repeat;
 			</div>
 		</div>
 		<p style="margin-top: 100px;margin-bottom:-20px; float: right;">*click on a date to add event</p>
-	</div>	
+	</div>
+	<!--========================================================================-->	
 	
+	<!--NEW EVENTS ADD BOX
+		==================================================================-->
 	<div ng-class="{blackfade: open_add_event==1}">
 		<div class="addevent" ng-class="{addevent_clicked: open_add_event==1}">
 			<div class="container content" ng-class="{content_clicked: open_add_event==1}">
@@ -130,22 +135,30 @@ body{background-repeat: no-repeat;
 				<button ng-click="close_add_event()" style="margin-left: 20px;" class="btn btn-lg btn-danger">close</button>
 			</div>
 		</div>
-	</div>	
-	
+	</div>
+	<!--========================================================================-->
+
+	<!--ADDED EVENTS BOX
+		=======================================================================-->
 	<div ng-class="{blackfade: show_all_event==1}">
 		<div class="addevent" ng-class="{addevent_clicked: show_all_event==1}">
-			<div class="container content" ng-class="{content_clicked: show_all_event==1}">
-				<div ng-repeat="event in events">
-					<span style="font-size: 50px;">{{event.t}}</span>
-					<span style="font-size: 20px;margin-left: 30px;">{{event.d}}, {{months[event.m].month}}, {{event.y}}</span>
-					<br>
-					<p style="width: 500px;">{{event.desc}}</p>
-					<br><br>
-				</div>
-				<button ng-click="close_all_event_page()" class="btn btn-lg btn-danger">close</button>
+			<div class="container content" ng-class="{content_clicked: show_all_event==1}" style="width: 500px; height: 480px;overflow-y: hidden;overflow-x: hidden;">
+				<span style="font-size: 40px;padding: 10px;">Added Events:</span>
+				<button ng-click="close_all_event_page()" class="btn btn-sm btn-danger" style="margin:15px 0 0 0;float: right;">&times;</button>
+				<center><p ng-if="events.length==0" style="color: grey; font-size: 15px;font-family: Comic Sans MS;"><i>No events Added...</i></p></center>
+				<div style="overflow-y: scroll;height: 400px;width: 107%;">
+					<div ng-repeat="event in events">
+						<span style="font-size: 50px;">{{event.t}}</span>
+						<span style="font-size: 20px;margin-left: 30px;">{{event.d}}, {{months[event.m].month}}, {{event.y}}</span>
+						<br>
+						<p style="width: 500px;">{{event.desc}}</p>
+						<br><br>
+					</div>
+				</div>	
 			</div>
 		</div>
 	</div>
+	<!--========================================================================-->
 
 <script>
 var app = angular.module('myApp', []);
@@ -171,18 +184,18 @@ app.controller('ctrl', function ($scope) {
 	}
 
 	$scope.months = [
-    	{month:'January', no_of_days:31, bgimg:"http://apps.rixos.com/Repo/List/2026-20171025-0b8450f4-caae-4bd4-be14-f9c05418f6d0.jpg"},
-    	{month:'February', no_of_days:28, bgimg:"https://static1.squarespace.com/static/55b43a79e4b0e6e72561f70a/5b885064562fa784c87cb9ce/5b88508e8a922d156a7bf612/1535660263436/cabin_AL_3.jpg?format=1000w"},
-    	{month:'March', no_of_days:31, bgimg:"http://profilepicturesdp.com/wp-content/uploads/2018/06/colours-dp-10.jpg"},
-    	{month:'April', no_of_days:30, bgimg:"https://static.vecteezy.com/system/resources/previews/000/117/397/original/free-summer-beach-vector-illustration.jpg"},
-    	{month:'May', no_of_days:31, bgimg:"https://static.vecteezy.com/system/resources/previews/000/117/397/original/free-summer-beach-vector-illustration.jpg"},
-    	{month:'June', no_of_days:30, bgimg:"https://maxcdn.icons8.com/app/uploads/2018/07/elegant-digital-illustration-1200x794.png"},
-    	{month:'July', no_of_days:31, bgimg:"https://maxcdn.icons8.com/app/uploads/2018/07/elegant-digital-illustration-1200x794.png"},
-    	{month:'August', no_of_days:31, bgimg:"https://i.pinimg.com/originals/a8/b7/27/a8b72709ef03648d9ad893def67f2473.jpg"},
-    	{month:'September', no_of_days:30, bgimg:"https://i.pinimg.com/originals/a8/b7/27/a8b72709ef03648d9ad893def67f2473.jpg"},
-    	{month:'October', no_of_days:31, bgimg:"https://www.thisiscolossal.com/wp-content/uploads/2018/06/mercadante-1.jpg"},
-    	{month:'November', no_of_days:30, bgimg:"https://blogmedia.evbstatic.com/wp-content/uploads/wpmulti/sites/3/2016/10/19171356/new-years-eve1.jpg"},
-    	{month:'December', no_of_days:31, bgimg:"https://www.plannthat.com/wp-content/uploads/2018/10/christmas-marketing-plan.jpeg"}
+    	{month:'January', no_of_days:31, bgimg:"https://farm5.staticflickr.com/4894/46445790692_5f261d4921_o.jpg"},
+    	{month:'February', no_of_days:28, bgimg:"https://farm5.staticflickr.com/4849/45584065565_c513645758_o.jpg"},
+    	{month:'March', no_of_days:31, bgimg:"https://farm8.staticflickr.com/7815/46445790272_b9e95ff1ba_o.jpg"},
+    	{month:'April', no_of_days:30, bgimg:"https://farm5.staticflickr.com/4812/46445789542_64e907cdee_o.jpg"},
+    	{month:'May', no_of_days:31, bgimg:"https://farm5.staticflickr.com/4812/46445789542_64e907cdee_o.jpg"},
+    	{month:'June', no_of_days:30, bgimg:"https://farm8.staticflickr.com/7876/45584065525_0d0efbc14d_o.png"},
+    	{month:'July', no_of_days:31, bgimg:"https://farm8.staticflickr.com/7876/45584065525_0d0efbc14d_o.png"},
+    	{month:'August', no_of_days:31, bgimg:"https://farm8.staticflickr.com/7865/46445789122_7c72b87d44_o.jpg"},
+    	{month:'September', no_of_days:30, bgimg:"https://farm8.staticflickr.com/7865/46445789122_7c72b87d44_o.jpg"},
+    	{month:'October', no_of_days:31, bgimg:"https://farm5.staticflickr.com/4805/45584066195_4cb77e6610_o.jpg"},
+    	{month:'November', no_of_days:30, bgimg:"https://farm5.staticflickr.com/4813/45584065255_688c15914d_o.jpg"},
+    	{month:'December', no_of_days:31, bgimg:"https://farm8.staticflickr.com/7898/44680372600_3d861f0256_o.jpg"}
     ];
 
     $scope.weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
