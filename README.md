@@ -17,17 +17,19 @@
 <ul>
   <li>
     <h3>Shows date and navigates between months and years</h3>
-    <img src="" alt="screenshot">
-    <img src="" alt="screenshot">
-    <img src="" alt="screenshot">
-  </li>
+    <img src="https://farm8.staticflickr.com/7839/46496985741_b4327b4d6b_o.png" width="280" alt="Screenshot (17)">
+    <img src="https://farm8.staticflickr.com/7905/32624076658_cb53aaff0f_o.png" width="280" alt="Screenshot (18)">
+    <img src="https://farm8.staticflickr.com/7924/32624077308_6ff2967b78_o.png" width="280" alt="Screenshot (16)">
   <li>
     <h3>Add Events</h3>
-    <img src="" alt="screenshot">
+    <img src="https://farm5.staticflickr.com/4842/46496984151_329545cf51_o.png" width="280" alt="Screenshot (21)">
+    <img src="https://farm5.staticflickr.com/4857/46496984621_c3f9e674a5_o.png" width="280" alt="Screenshot (19)">
+    <img src="https://farm8.staticflickr.com/7901/32624075978_f5e1628ee2_o.png" width="280" alt="Screenshot (20)">
   </li>
   <li>
     <h3>Access Added Events</h3>
-    <img src="" alt="screenshot">
+    <img src="https://farm8.staticflickr.com/7916/32624075628_f64571f9d1_o.png" width="280" alt="Screenshot (22)">
+    <img src="https://farm8.staticflickr.com/7818/46496983671_aa67a33e35_o.png" width="280" alt="Screenshot (23)">
   </li>
 </ul>
 
