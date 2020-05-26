@@ -24,7 +24,7 @@ public class User {
 	}
 
 	public User(int userId, String username, String password) {
-		userId = userId;
+		this.userId = userId;
 		this.username = username;
 		this.password = password;
 	}
@@ -34,7 +34,7 @@ public class User {
 	}
 
 	public void setUserId(int userId) {
-		userId = userId;
+		this.userId = userId;
 	}
 
 	public String getUsername() {
