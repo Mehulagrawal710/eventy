@@ -19,4 +19,9 @@ public class UsersDAO {
 		return userId;
 	}
 
+	public void createNewUser(User newUser, Session session) {
+		session.save(newUser);
+		session.getTransaction().commit();
+	}
+
 }
