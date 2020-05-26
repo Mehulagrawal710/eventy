@@ -5,13 +5,13 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-@Entity(name = "user")
-@Table(name = "user")
+@Entity(name = "users")
+@Table(name = "users")
 public class User {
 
 	@Id
 	@Column(name = "user_id")
-	private int UserId;
+	private int userId;
 
 	@Column(name = "username")
 	private String username;
@@ -24,17 +24,17 @@ public class User {
 	}
 
 	public User(int userId, String username, String password) {
-		UserId = userId;
+		userId = userId;
 		this.username = username;
 		this.password = password;
 	}
 
 	public int getUserId() {
-		return UserId;
+		return userId;
 	}
 
 	public void setUserId(int userId) {
-		UserId = userId;
+		userId = userId;
 	}
 
 	public String getUsername() {
@@ -51,6 +51,11 @@ public class User {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	@Override
+	public String toString() {
+		return "User [userId=" + userId + ", username=" + username + ", password=" + password + "]";
 	}
 
 }

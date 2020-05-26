@@ -15,9 +15,8 @@ public class Event {
 	@Column(name = "event_id")
 	private int eventId;
 
-	@ManyToOne(targetEntity = User.class)
-	@JoinColumn(name = "user_id")
-	User userEntity;
+	@Column(name = "user_id")
+	int userId;
 
 	@Column(name = "title")
 	private String title;
@@ -31,9 +30,21 @@ public class Event {
 	@Column(name = "creation_datetime")
 	private String creationDatetime;
 
-	public Event(int eventId, User userEntity, String title, String description, String date, String creationDatetime) {
+	public Event() {
+
+	}
+
+	public Event(int userId, String title, String description, String date, String creationDatetime) {
+		this.userId = userId;
+		this.title = title;
+		this.description = description;
+		this.date = date;
+		this.creationDatetime = creationDatetime;
+	}
+
+	public Event(int eventId, int userId, String title, String description, String date, String creationDatetime) {
 		this.eventId = eventId;
-		this.userEntity = userEntity;
+		this.userId = userId;
 		this.title = title;
 		this.description = description;
 		this.date = date;
@@ -48,12 +59,12 @@ public class Event {
 		this.eventId = eventId;
 	}
 
-	public User getUserEntity() {
-		return userEntity;
+	public int getUserId() {
+		return userId;
 	}
 
-	public void setUserEntity(User userEntity) {
-		this.userEntity = userEntity;
+	public void setUserId(int userId) {
+		this.userId = userId;
 	}
 
 	public String getTitle() {
@@ -90,8 +101,8 @@ public class Event {
 
 	@Override
 	public String toString() {
-		return "Event [eventId=" + eventId + ", userEntity=" + userEntity + ", title=" + title + ", description="
-				+ description + ", date=" + date + ", creationDatetime=" + creationDatetime + "]";
+		return "Event [eventId=" + eventId + ", userId=" + userId + ", title=" + title + ", description=" + description
+				+ ", date=" + date + ", creationDatetime=" + creationDatetime + "]";
 	}
 
 }
