@@ -1,11 +1,15 @@
 package calendar.models;
 
+import java.time.LocalDateTime;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity(name = "events")
 @Table(name = "events")
@@ -16,6 +20,7 @@ public class Event {
 	@Column(name = "event_id")
 	private int eventId;
 
+	@JsonIgnore
 	@Column(name = "user_id")
 	int userId;
 
@@ -29,22 +34,13 @@ public class Event {
 	private String date;
 
 	@Column(name = "creation_datetime")
-	private String creationDatetime;
+	private LocalDateTime creationDatetime;
 
 	public Event() {
 
 	}
 
-	public Event(int userId, String title, String description, String date, String creationDatetime) {
-		this.userId = userId;
-		this.title = title;
-		this.description = description;
-		this.date = date;
-		this.creationDatetime = creationDatetime;
-	}
-
-	public Event(int eventId, int userId, String title, String description, String date, String creationDatetime) {
-		this.eventId = eventId;
+	public Event(int userId, String title, String description, String date, LocalDateTime creationDatetime) {
 		this.userId = userId;
 		this.title = title;
 		this.description = description;
@@ -92,11 +88,11 @@ public class Event {
 		this.date = date;
 	}
 
-	public String getCreationDatetime() {
+	public LocalDateTime getCreationDatetime() {
 		return creationDatetime;
 	}
 
-	public void setCreationDatetime(String creationDatetime) {
+	public void setCreationDatetime(LocalDateTime creationDatetime) {
 		this.creationDatetime = creationDatetime;
 	}
 

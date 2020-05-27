@@ -7,7 +7,7 @@ import calendar.models.User;
 public class UsersDAO {
 
 	public int getUserIdByCredentials(String username, String password, Session session) {
-		String userQuery = "from users where password = " + password;
+		String userQuery = "from users where username = '" + username + "' and password = '" + password + "'";
 		List<User> userList = session.createQuery(userQuery).getResultList();
 
 		// When no match found for username and password
@@ -19,9 +19,17 @@ public class UsersDAO {
 		return userId;
 	}
 
-	public void createNewUser(User newUser, Session session) {
-		session.save(newUser);
-		session.getTransaction().commit();
+	public boolean createNewUser(User newUser, Session session) {
+		String username = newUser.getUsername();
+		String userQuery = "from users where username = '" + username + "'";
+		List<User> userList = session.createQuery(userQuery).getResultList();
+		if (userList.size() == 1) {
+			return false;
+		} else {
+			session.save(newUser);
+			session.getTransaction().commit();
+			return true;
+		}
 	}
 
 }

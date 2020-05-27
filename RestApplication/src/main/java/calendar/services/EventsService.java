@@ -1,7 +1,8 @@
 package calendar.services;
 
+import java.text.ParseException;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+
 import java.util.List;
 
 import org.hibernate.Session;
@@ -18,10 +19,10 @@ public class EventsService {
 		return eventList;
 	}
 
-	public Event createNewEvent(int userId, String title, String description, String date, Session session) {
-		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+	public Event createNewEvent(int userId, String title, String description, String date, Session session)
+			throws ParseException {
 		LocalDateTime datetime = LocalDateTime.now();
-		Event newEvent = new Event(userId, title, description, date, dtf.format(datetime));
+		Event newEvent = new Event(userId, title, description, date, datetime);
 		eventsDao.createNewEvent(newEvent, session);
 		return newEvent;
 	}

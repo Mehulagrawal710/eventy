@@ -1,5 +1,6 @@
 package calendar.resources;
 
+import java.text.ParseException;
 import java.util.List;
 
 import javax.ws.rs.DELETE;
@@ -10,8 +11,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -20,8 +19,13 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import calendar.models.Event;
+import calendar.models.Token;
 import calendar.models.User;
+import calendar.services.AuthService;
 import calendar.services.EventsService;
 import calendar.services.UsersService;
 
@@ -30,41 +34,49 @@ public class EventResource {
 
 	EventsService eventsService = new EventsService();
 	UsersService usersService = new UsersService();
+	AuthService authService = new AuthService();
+
+	ObjectMapper mapper = new ObjectMapper();
 
 	SessionFactory factory = new Configuration().configure("hibernate.cfg.xml").addAnnotatedClass(Event.class)
-			.addAnnotatedClass(User.class).buildSessionFactory();
+			.addAnnotatedClass(User.class).addAnnotatedClass(Token.class).buildSessionFactory();
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getAllEvents(@Context HttpHeaders headers) {
+	public Response getAllEvents(@QueryParam("token") String token) throws JsonProcessingException {
 
 		Session session = factory.getCurrentSession();
 		session.beginTransaction();
-		int userId = usersService.getUserIdByAuthorizationHeader(headers, session);
+		int validity = authService.checkTokenValidity(token, session);
 
-		// When no match found for username and password
-		if (userId == -1) {
-			return Response.status(Status.UNAUTHORIZED).entity("Invalid Credentials").build();
+		if (validity == -1) {
+			return Response.status(Status.UNAUTHORIZED).entity("Invalid Token").build();
+		} else if (validity == 0) {
+			return Response.status(Status.NOT_ACCEPTABLE).entity("Token has expired").build();
 		}
+		int userId = authService.getUserIdFromToken(token, session);
 
-		List<Event> eventList = eventsService.getAllEventsByUserId(userId, session);
 		// return all events;
-		return Response.status(Status.OK).entity(eventList).build();
+		List<Event> eventList = eventsService.getAllEventsByUserId(userId, session);
+		return Response.status(Status.OK).entity(mapper.writeValueAsString(eventList)).build();
 	}
 
 	@GET
 	@Path("/{eventid}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getEventById(@Context HttpHeaders headers, @PathParam("eventid") int eventId) {
+	public Response getEventById(@QueryParam("token") String token, @PathParam("eventid") int eventId)
+			throws JsonProcessingException {
 
 		Session session = factory.getCurrentSession();
 		session.beginTransaction();
-		int userId = usersService.getUserIdByAuthorizationHeader(headers, session);
+		int validity = authService.checkTokenValidity(token, session);
 
-		// When no match found for username and password
-		if (userId == -1) {
-			return Response.status(Status.UNAUTHORIZED).entity("Invalid Credentials").build();
+		if (validity == -1) {
+			return Response.status(Status.UNAUTHORIZED).entity("Invalid Token").build();
+		} else if (validity == 0) {
+			return Response.status(Status.NOT_ACCEPTABLE).entity("Token has expired").build();
 		}
+		int userId = authService.getUserIdFromToken(token, session);
 
 		Event event = eventsService.getEventById(eventId, userId, session);
 		// When no event is present with the given Event Id for this User
@@ -74,42 +86,49 @@ public class EventResource {
 		}
 		// return event;
 		else {
-			return Response.status(Status.OK).entity(event).build();
+			return Response.status(Status.OK).entity(mapper.writeValueAsString(event)).build();
 		}
 	}
 
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response addEvent(@Context HttpHeaders headers, @QueryParam("title") String title,
-			@QueryParam("description") String description, @QueryParam("date") String date) {
+	public Response addEvent(@QueryParam("token") String token, @QueryParam("title") String title,
+			@QueryParam("description") String description, @QueryParam("date") String date)
+			throws JsonProcessingException, ParseException {
 		Session session = factory.getCurrentSession();
 		session.beginTransaction();
-		int userId = usersService.getUserIdByAuthorizationHeader(headers, session);
+		int validity = authService.checkTokenValidity(token, session);
 
-		// When no match found for username and password
-		if (userId == -1) {
-			return Response.status(Status.UNAUTHORIZED).entity("Invalid Credentials").build();
+		if (validity == -1) {
+			return Response.status(Status.UNAUTHORIZED).entity("Invalid Token").build();
+		} else if (validity == 0) {
+			return Response.status(Status.NOT_ACCEPTABLE).entity("Token has expired").build();
 		}
+		int userId = authService.getUserIdFromToken(token, session);
 
 		// creating a new events with parameters
 		Event newEvent = eventsService.createNewEvent(userId, title, description, date, session);
 		// return newly created event
-		return Response.status(Status.CREATED).entity(newEvent).build();
+		return Response.status(Status.CREATED).entity(mapper.writeValueAsString(newEvent)).build();
 	}
 
 	@PUT
+	@Path("/{eventid}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response updateEvent(@Context HttpHeaders headers, @QueryParam("eventid") int eventId,
-			@QueryParam("title") String title, @QueryParam("description") String description) {
+	public Response updateEvent(@QueryParam("token") String token, @PathParam("eventid") int eventId,
+			@QueryParam("title") String title, @QueryParam("description") String description)
+			throws JsonProcessingException {
 
 		Session session = factory.getCurrentSession();
 		session.beginTransaction();
-		int userId = usersService.getUserIdByAuthorizationHeader(headers, session);
+		int validity = authService.checkTokenValidity(token, session);
 
-		// When no match found for username and password
-		if (userId == -1) {
-			return Response.status(Status.UNAUTHORIZED).entity("Invalid Credentials").build();
+		if (validity == -1) {
+			return Response.status(Status.UNAUTHORIZED).entity("Invalid Token").build();
+		} else if (validity == 0) {
+			return Response.status(Status.NOT_ACCEPTABLE).entity("Token has expired").build();
 		}
+		int userId = authService.getUserIdFromToken(token, session);
 
 		// updating event with parameters
 		Event updatedEvent = eventsService.updateEvent(eventId, title, description, userId, session);
@@ -121,22 +140,25 @@ public class EventResource {
 		}
 		// return updated event
 		else {
-			return Response.status(Status.OK).entity(updatedEvent).build();
+			return Response.status(Status.OK).entity(mapper.writeValueAsString(updatedEvent)).build();
 		}
 	}
 
 	@DELETE
+	@Path("/{eventid}")
 	@Produces(MediaType.TEXT_PLAIN)
-	public Response deleteEvent(@Context HttpHeaders headers, @QueryParam("eventid") int eventId) {
+	public Response deleteEvent(@QueryParam("token") String token, @PathParam("eventid") int eventId) {
 
 		Session session = factory.getCurrentSession();
 		session.beginTransaction();
-		int userId = usersService.getUserIdByAuthorizationHeader(headers, session);
+		int validity = authService.checkTokenValidity(token, session);
 
-		// When no match found for username and password
-		if (userId == -1) {
-			return Response.status(Status.UNAUTHORIZED).entity("Invalid Credentials").build();
+		if (validity == -1) {
+			return Response.status(Status.UNAUTHORIZED).entity("Invalid Token").build();
+		} else if (validity == 0) {
+			return Response.status(Status.NOT_ACCEPTABLE).entity("Token has expired").build();
 		}
+		int userId = authService.getUserIdFromToken(token, session);
 
 		// checking for validity and deleting event
 		boolean success = eventsService.deleteEvent(eventId, userId, session);
