@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -35,6 +36,9 @@ public class Event {
 
 	@Column(name = "creation_datetime")
 	private LocalDateTime creationDatetime;
+
+	@Transient
+	Link link;
 
 	public Event() {
 
@@ -94,6 +98,14 @@ public class Event {
 
 	public void setCreationDatetime(LocalDateTime creationDatetime) {
 		this.creationDatetime = creationDatetime;
+	}
+
+	public Link getLink() {
+		return link;
+	}
+
+	public void setLink(Link links) {
+		this.link = links;
 	}
 
 	@Override

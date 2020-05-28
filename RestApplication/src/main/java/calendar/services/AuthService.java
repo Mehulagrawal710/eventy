@@ -24,9 +24,14 @@ public class AuthService {
 	}
 
 	public int checkTokenValidity(String token, Session session) {
+		// When token is not received in query parameter
+		if(token==null) {
+			return -2;
+		}
+		
 		Token tokenEntity = session.get(Token.class, token);
 
-		// When token is not present
+		// When token is not present in token pool
 		if (tokenEntity == null) {
 			return -1;
 		}
