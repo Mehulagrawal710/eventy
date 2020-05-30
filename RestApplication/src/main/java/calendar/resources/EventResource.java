@@ -1,5 +1,6 @@
 package calendar.resources;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.List;
 
@@ -25,10 +26,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import calendar.models.Event;
-import calendar.models.Link;
 import calendar.models.Token;
 import calendar.models.User;
 import calendar.services.AuthService;
+import calendar.services.EmailService;
 import calendar.services.EventsService;
 import calendar.services.UsersService;
 
@@ -38,6 +39,7 @@ public class EventResource {
 	EventsService eventsService = new EventsService();
 	UsersService usersService = new UsersService();
 	AuthService authService = new AuthService();
+	EmailService emailService = new EmailService();
 
 	ObjectMapper mapper = new ObjectMapper();
 
@@ -64,11 +66,7 @@ public class EventResource {
 		int userId = authService.getUserIdFromToken(token, session);
 
 		// return all events;
-		List<Event> eventList = eventsService.getAllEventsByUserId(userId, session);
-		for (Event event : eventList) {
-			String selfUri = uri.getAbsolutePath().toString() + "/" + event.getEventId();
-			event.setLink(new Link(selfUri, "self", "GET"));
-		}
+		List<Event> eventList = eventsService.getAllEventsByUserId(userId, uri, session);
 		return Response.status(Status.OK).entity(mapper.writeValueAsString(eventList)).build();
 	}
 
@@ -92,7 +90,7 @@ public class EventResource {
 		}
 		int userId = authService.getUserIdFromToken(token, session);
 
-		Event event = eventsService.getEventById(eventId, userId, session);
+		Event event = eventsService.getEventById(eventId, userId, uri, session);
 		// When no event is present with the given Event Id for this User
 		if (event == null) {
 			return Response.status(Status.NOT_FOUND)
@@ -100,8 +98,6 @@ public class EventResource {
 		}
 		// return event;
 		else {
-			String selfUri = uri.getAbsolutePath().toString();
-			event.setLink(new Link(selfUri, "self", "GET"));
 			return Response.status(Status.OK).entity(mapper.writeValueAsString(event)).build();
 		}
 	}
@@ -109,8 +105,10 @@ public class EventResource {
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response addEvent(@QueryParam("token") String token, @QueryParam("title") String title,
-			@QueryParam("description") String description, @QueryParam("date") String date, @Context UriInfo uri)
-			throws JsonProcessingException, ParseException {
+			@QueryParam("description") String description, @QueryParam("date") String date,
+			@QueryParam("isNotifActive") boolean isNotifActive,
+			@QueryParam("timeBeforeToNotify") int timeBeforeToNotify, @QueryParam("notifMessage") String notifMessage,
+			@Context UriInfo uri) throws ParseException, IOException {
 		Session session = factory.getCurrentSession();
 		session.beginTransaction();
 		int validity = authService.checkTokenValidity(token, session);
@@ -126,9 +124,13 @@ public class EventResource {
 		int userId = authService.getUserIdFromToken(token, session);
 
 		// creating a new events with parameters
-		Event newEvent = eventsService.createNewEvent(userId, title, description, date, session);
-		String selfUri = uri.getAbsolutePath().toString() + "/" + newEvent.getEventId();
-		newEvent.setLink(new Link(selfUri, "self", "GET"));
+		Event newEvent = eventsService.createNewEvent(userId, title, description, date, isNotifActive,
+				timeBeforeToNotify, notifMessage, uri, session);
+
+		if (isNotifActive) {
+			emailService.scheduleNewNotification(newEvent, session);
+		}
+		session.getTransaction().commit();
 		// return newly created event
 		return Response.status(Status.CREATED).entity(mapper.writeValueAsString(newEvent)).build();
 	}
@@ -137,8 +139,10 @@ public class EventResource {
 	@Path("/{eventid}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response updateEvent(@QueryParam("token") String token, @PathParam("eventid") int eventId,
-			@QueryParam("title") String title, @QueryParam("description") String description, @Context UriInfo uri)
-			throws JsonProcessingException {
+			@QueryParam("title") String title, @QueryParam("description") String description,
+			@QueryParam("isNotifActive") boolean isNotifActive,
+			@QueryParam("timeBeforeToNotify") int timeBeforeToNotify, @QueryParam("notifMessage") String notifMessage,
+			@Context UriInfo uri) throws IOException {
 
 		Session session = factory.getCurrentSession();
 		session.beginTransaction();
@@ -155,7 +159,8 @@ public class EventResource {
 		int userId = authService.getUserIdFromToken(token, session);
 
 		// updating event with parameters
-		Event updatedEvent = eventsService.updateEvent(eventId, title, description, userId, session);
+		Event updatedEvent = eventsService.updateEvent(eventId, title, description, isNotifActive, timeBeforeToNotify,
+				notifMessage, userId, uri, session);
 
 		// When no event is present with the given Event Id for this User
 		if (updatedEvent == null) {
@@ -164,8 +169,10 @@ public class EventResource {
 		}
 		// return updated event
 		else {
-			String selfUri = uri.getAbsolutePath().toString();
-			updatedEvent.setLink(new Link(selfUri, "self", "GET"));
+			if (isNotifActive) {
+				emailService.scheduleNewNotification(updatedEvent, session);
+			}
+			session.getTransaction().commit();
 			return Response.status(Status.OK).entity(mapper.writeValueAsString(updatedEvent)).build();
 		}
 	}

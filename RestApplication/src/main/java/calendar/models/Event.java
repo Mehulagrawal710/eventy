@@ -32,24 +32,60 @@ public class Event {
 	private String description;
 
 	@Column(name = "date")
-	private String date;
+	private LocalDateTime date;
+
+	@Transient
+	@Column(name = "status")
+	private String status;
 
 	@Column(name = "creation_datetime")
 	private LocalDateTime creationDatetime;
 
+	@Column(name = "last_updated_datetime")
+	private LocalDateTime lastUpdatedDatetime;
+
+	@Column(name = "no_of_times_updated")
+	private int noOfTimesUpdated;
+
+	@JsonIgnore
+	@Column(name = "is_notif_active")
+	private boolean isNotifActive;
+
+	@JsonIgnore
+	@Column(name = "time_before_to_notify")
+	private int timeBeforeToNotify;
+
+	@JsonIgnore
+	@Column(name = "notif_message")
+	private String notifMessage;
+
 	@Transient
-	Link link;
+	private Link link;
+
+	@Transient
+	private Creater creater;
+
+	@Transient
+	private Notification notification;
 
 	public Event() {
 
 	}
 
-	public Event(int userId, String title, String description, String date, LocalDateTime creationDatetime) {
+	public Event(int userId, String title, String description, LocalDateTime date, String status,
+			LocalDateTime creationDatetime, boolean isNotifActive, int timeBeforeToNotify, String notifMessage,
+			Creater creater, Notification notification) {
 		this.userId = userId;
 		this.title = title;
 		this.description = description;
 		this.date = date;
+		this.status = status;
 		this.creationDatetime = creationDatetime;
+		this.isNotifActive = isNotifActive;
+		this.timeBeforeToNotify = timeBeforeToNotify;
+		this.notifMessage = notifMessage;
+		this.creater = creater;
+		this.notification = notification;
 	}
 
 	public int getEventId() {
@@ -84,12 +120,20 @@ public class Event {
 		this.description = description;
 	}
 
-	public String getDate() {
+	public LocalDateTime getDate() {
 		return date;
 	}
 
-	public void setDate(String date) {
+	public void setDate(LocalDateTime date) {
 		this.date = date;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
 	public LocalDateTime getCreationDatetime() {
@@ -100,18 +144,77 @@ public class Event {
 		this.creationDatetime = creationDatetime;
 	}
 
+	public LocalDateTime getLastUpdatedDatetime() {
+		return lastUpdatedDatetime;
+	}
+
+	public void setLastUpdatedDatetime(LocalDateTime lastUpdatedDatetime) {
+		this.lastUpdatedDatetime = lastUpdatedDatetime;
+	}
+
+	public int getNoOfTimesUpdated() {
+		return noOfTimesUpdated;
+	}
+
+	public void setNoOfTimesUpdated(int noOfTimesUpdated) {
+		this.noOfTimesUpdated = noOfTimesUpdated;
+	}
+
+	public boolean getIsNotifActive() {
+		return isNotifActive;
+	}
+
+	public void setIsNotifActive(boolean isNotifActive) {
+		this.isNotifActive = isNotifActive;
+	}
+
+	public int getTimeBeforeToNotify() {
+		return timeBeforeToNotify;
+	}
+
+	public void setTimeBeforeToNotify(int timeBeforeToNotify) {
+		this.timeBeforeToNotify = timeBeforeToNotify;
+	}
+
+	public String getNotifMessage() {
+		return notifMessage;
+	}
+
+	public void setNotifMessage(String notifMessage) {
+		this.notifMessage = notifMessage;
+	}
+
 	public Link getLink() {
 		return link;
 	}
 
-	public void setLink(Link links) {
-		this.link = links;
+	public void setLink(Link link) {
+		this.link = link;
+	}
+
+	public Creater getCreater() {
+		return creater;
+	}
+
+	public void setCreater(Creater creater) {
+		this.creater = creater;
+	}
+
+	public Notification getNotification() {
+		return notification;
+	}
+
+	public void setNotification(Notification notification) {
+		this.notification = notification;
 	}
 
 	@Override
 	public String toString() {
 		return "Event [eventId=" + eventId + ", userId=" + userId + ", title=" + title + ", description=" + description
-				+ ", date=" + date + ", creationDatetime=" + creationDatetime + "]";
+				+ ", date=" + date + ", status=" + status + ", creationDatetime=" + creationDatetime
+				+ ", lastUpdatedDatetime=" + lastUpdatedDatetime + ", noOfTimesUpdated=" + noOfTimesUpdated
+				+ ", isNotifActive=" + isNotifActive + ", timeBeforeToNotify=" + timeBeforeToNotify + ", notifMessage="
+				+ notifMessage + ", link=" + link + ", creater=" + creater + ", notification=" + notification + "]";
 	}
 
 }

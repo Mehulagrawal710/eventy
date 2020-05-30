@@ -6,6 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -20,6 +21,9 @@ public class Token {
 	@JsonIgnore
 	@Column(name = "user_id")
 	private int userId;
+
+	@Transient
+	private String message;
 
 	@Column(name = "issued")
 	private LocalDateTime issued;
@@ -56,6 +60,14 @@ public class Token {
 
 	public void setUserId(int userId) {
 		this.userId = userId;
+	}
+
+	public String getMessage() {
+		return message;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
 	}
 
 	public LocalDateTime getIssued() {

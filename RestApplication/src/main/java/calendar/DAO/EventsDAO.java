@@ -16,7 +16,6 @@ public class EventsDAO {
 
 	public void createNewEvent(Event newEvent, Session session) {
 		session.save(newEvent);
-		session.getTransaction().commit();
 	}
 
 }

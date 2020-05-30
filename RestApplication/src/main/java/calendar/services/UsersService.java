@@ -1,5 +1,7 @@
 package calendar.services;
 
+import java.util.UUID;
+
 import org.hibernate.Session;
 
 import calendar.DAO.UsersDAO;
@@ -9,13 +11,14 @@ public class UsersService {
 
 	UsersDAO usersDao = new UsersDAO();
 
-	public boolean createNewUserUsingCredentials(String username, String password, Session session) {
-		User newUser = new User(username, password);
+	public User createNewUserUsingCredentials(String username, String password, String email, Session session) {
+		String verificationKey = UUID.randomUUID().toString().replace("-", "");
+		User newUser = new User(username, password, email, verificationKey);
 		boolean created = usersDao.createNewUser(newUser, session);
 		if (!created) {
-			return false;
+			return null;
 		} else {
-			return true;
+			return newUser;
 		}
 	}
 
