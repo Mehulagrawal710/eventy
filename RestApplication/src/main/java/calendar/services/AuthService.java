@@ -15,7 +15,7 @@ public class AuthService {
 	public Token createAndReturnNewToken(int userId, Session session) {
 		String token = UUID.randomUUID().toString().replace("-", "");
 		LocalDateTime issued = LocalDateTime.now();
-		int timeToLive = 1800;
+		int timeToLive = 3600;
 		LocalDateTime expires = issued.plusSeconds(timeToLive);
 		Token newToken = new Token(token, userId, issued, timeToLive, expires);
 		session.save(newToken);

@@ -21,6 +21,7 @@ import javax.ws.rs.core.Response.Status;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
+import org.json.JSONObject;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -56,18 +57,23 @@ public class EventResource {
 		int validity = authService.checkTokenValidity(token, session);
 
 		if (validity == -2) {
-			return Response.status(Status.BAD_REQUEST).entity("Required Parameter 'token' is missing in the request")
-					.build();
+			String jsonString = new JSONObject().put("message", "token missing").toString();
+			return Response.status(Status.BAD_REQUEST).entity(jsonString).build();
 		} else if (validity == -1) {
-			return Response.status(Status.UNAUTHORIZED).entity("Invalid Token").build();
+			String jsonString = new JSONObject().put("message", "invalid token").toString();
+			return Response.status(Status.UNAUTHORIZED).entity(jsonString).build();
 		} else if (validity == 0) {
-			return Response.status(Status.NOT_ACCEPTABLE).entity("Token has expired").build();
+			String jsonString = new JSONObject().put("message", "token expired").toString();
+			return Response.status(Status.NOT_ACCEPTABLE).entity(jsonString).build();
 		}
 		int userId = authService.getUserIdFromToken(token, session);
 
 		// return all events;
 		List<Event> eventList = eventsService.getAllEventsByUserId(userId, uri, session);
-		return Response.status(Status.OK).entity(mapper.writeValueAsString(eventList)).build();
+		String jsonString = new JSONObject().put("message", "ok").put("resultCount", eventList.size())
+				.put("events", "@events").toString();
+		jsonString = jsonString.replace("\"@events\"", mapper.writeValueAsString(eventList));
+		return Response.status(Status.OK).entity(jsonString).build();
 	}
 
 	@GET
@@ -81,24 +87,28 @@ public class EventResource {
 		int validity = authService.checkTokenValidity(token, session);
 
 		if (validity == -2) {
-			return Response.status(Status.BAD_REQUEST).entity("Required Parameter 'token' is missing in the request")
-					.build();
+			String jsonString = new JSONObject().put("message", "token missing").toString();
+			return Response.status(Status.BAD_REQUEST).entity(jsonString).build();
 		} else if (validity == -1) {
-			return Response.status(Status.UNAUTHORIZED).entity("Invalid Token").build();
+			String jsonString = new JSONObject().put("message", "invalid token").toString();
+			return Response.status(Status.UNAUTHORIZED).entity(jsonString).build();
 		} else if (validity == 0) {
-			return Response.status(Status.NOT_ACCEPTABLE).entity("Token has expired").build();
+			String jsonString = new JSONObject().put("message", "token expired").toString();
+			return Response.status(Status.NOT_ACCEPTABLE).entity(jsonString).build();
 		}
 		int userId = authService.getUserIdFromToken(token, session);
 
 		Event event = eventsService.getEventById(eventId, userId, uri, session);
 		// When no event is present with the given Event Id for this User
 		if (event == null) {
-			return Response.status(Status.NOT_FOUND)
-					.entity("No event with the provided Event Id is found for this user").build();
+			String jsonString = new JSONObject().put("message", "no such event found for this user").toString();
+			return Response.status(Status.NOT_FOUND).entity(jsonString).build();
 		}
 		// return event;
 		else {
-			return Response.status(Status.OK).entity(mapper.writeValueAsString(event)).build();
+			String jsonString = new JSONObject().put("message", "ok").put("event", "@events").toString();
+			jsonString = jsonString.replace("\"@events\"", mapper.writeValueAsString(event));
+			return Response.status(Status.OK).entity(jsonString).build();
 		}
 	}
 
@@ -114,12 +124,14 @@ public class EventResource {
 		int validity = authService.checkTokenValidity(token, session);
 
 		if (validity == -2) {
-			return Response.status(Status.BAD_REQUEST).entity("Required Parameter 'token' is missing in the request")
-					.build();
+			String jsonString = new JSONObject().put("message", "token missing").toString();
+			return Response.status(Status.BAD_REQUEST).entity(jsonString).build();
 		} else if (validity == -1) {
-			return Response.status(Status.UNAUTHORIZED).entity("Invalid Token").build();
+			String jsonString = new JSONObject().put("message", "invalid token").toString();
+			return Response.status(Status.UNAUTHORIZED).entity(jsonString).build();
 		} else if (validity == 0) {
-			return Response.status(Status.NOT_ACCEPTABLE).entity("Token has expired").build();
+			String jsonString = new JSONObject().put("message", "token expired").toString();
+			return Response.status(Status.NOT_ACCEPTABLE).entity(jsonString).build();
 		}
 		int userId = authService.getUserIdFromToken(token, session);
 
@@ -132,7 +144,9 @@ public class EventResource {
 		}
 		session.getTransaction().commit();
 		// return newly created event
-		return Response.status(Status.CREATED).entity(mapper.writeValueAsString(newEvent)).build();
+		String jsonString = new JSONObject().put("message", "ok").put("event", "@events").toString();
+		jsonString = jsonString.replace("\"@events\"", mapper.writeValueAsString(newEvent));
+		return Response.status(Status.CREATED).entity(jsonString).build();
 	}
 
 	@PUT
@@ -149,12 +163,14 @@ public class EventResource {
 		int validity = authService.checkTokenValidity(token, session);
 
 		if (validity == -2) {
-			return Response.status(Status.BAD_REQUEST).entity("Required Parameter 'token' is missing in the request")
-					.build();
+			String jsonString = new JSONObject().put("message", "token missing").toString();
+			return Response.status(Status.BAD_REQUEST).entity(jsonString).build();
 		} else if (validity == -1) {
-			return Response.status(Status.UNAUTHORIZED).entity("Invalid Token").build();
+			String jsonString = new JSONObject().put("message", "invalid token").toString();
+			return Response.status(Status.UNAUTHORIZED).entity(jsonString).build();
 		} else if (validity == 0) {
-			return Response.status(Status.NOT_ACCEPTABLE).entity("Token has expired").build();
+			String jsonString = new JSONObject().put("message", "token expired").toString();
+			return Response.status(Status.NOT_ACCEPTABLE).entity(jsonString).build();
 		}
 		int userId = authService.getUserIdFromToken(token, session);
 
@@ -164,8 +180,8 @@ public class EventResource {
 
 		// When no event is present with the given Event Id for this User
 		if (updatedEvent == null) {
-			return Response.status(Status.NOT_FOUND)
-					.entity("No event with the provided Event Id is found for this user").build();
+			String jsonString = new JSONObject().put("message", "no such event found for this user").toString();
+			return Response.status(Status.NOT_FOUND).entity(jsonString).build();
 		}
 		// return updated event
 		else {
@@ -173,7 +189,9 @@ public class EventResource {
 				emailService.scheduleNewNotification(updatedEvent, session);
 			}
 			session.getTransaction().commit();
-			return Response.status(Status.OK).entity(mapper.writeValueAsString(updatedEvent)).build();
+			String jsonString = new JSONObject().put("message", "ok").put("event", "@events").toString();
+			jsonString = jsonString.replace("\"@events\"", mapper.writeValueAsString(updatedEvent));
+			return Response.status(Status.OK).entity(jsonString).build();
 		}
 	}
 
@@ -187,12 +205,14 @@ public class EventResource {
 		int validity = authService.checkTokenValidity(token, session);
 
 		if (validity == -2) {
-			return Response.status(Status.BAD_REQUEST).entity("Required Parameter 'token' is missing in the request")
-					.build();
+			String jsonString = new JSONObject().put("message", "token missing").toString();
+			return Response.status(Status.BAD_REQUEST).entity(jsonString).build();
 		} else if (validity == -1) {
-			return Response.status(Status.UNAUTHORIZED).entity("Invalid Token").build();
+			String jsonString = new JSONObject().put("message", "invalid token").toString();
+			return Response.status(Status.UNAUTHORIZED).entity(jsonString).build();
 		} else if (validity == 0) {
-			return Response.status(Status.NOT_ACCEPTABLE).entity("Token has expired").build();
+			String jsonString = new JSONObject().put("message", "token expired").toString();
+			return Response.status(Status.NOT_ACCEPTABLE).entity(jsonString).build();
 		}
 		int userId = authService.getUserIdFromToken(token, session);
 
@@ -201,13 +221,13 @@ public class EventResource {
 
 		// When no event is present with the given Event Id for this User
 		if (!success) {
-			return Response.status(Status.NOT_FOUND)
-					.entity("No event with the provided Event Id is found for this user").build();
+			String jsonString = new JSONObject().put("message", "no such event found for this user").toString();
+			return Response.status(Status.NOT_FOUND).entity(jsonString).build();
 		}
 		// returning 200 OK and success message
 		else {
-			String successMsg = "Event with event-Id " + eventId + " deleted successfully";
-			return Response.status(Status.OK).entity(successMsg).build();
+			String jsonString = new JSONObject().put("message", "ok").toString();
+			return Response.status(Status.OK).entity(jsonString).build();
 		}
 	}
 
