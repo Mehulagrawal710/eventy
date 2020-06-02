@@ -20,7 +20,7 @@ public class EventsService {
 
 	EventsDAO eventsDao = new EventsDAO();
 
-	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss a");
+	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
 	public List<Event> getAllEventsByUserId(int userId, UriInfo uri, Session session) {
 		List<Event> eventList = eventsDao.getAllEventsByUserId(userId, session);

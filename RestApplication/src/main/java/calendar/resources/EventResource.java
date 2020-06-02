@@ -197,7 +197,7 @@ public class EventResource {
 
 	@DELETE
 	@Path("/{eventid}")
-	@Produces(MediaType.TEXT_PLAIN)
+	@Produces(MediaType.APPLICATION_JSON)
 	public Response deleteEvent(@QueryParam("token") String token, @PathParam("eventid") int eventId) {
 
 		Session session = factory.getCurrentSession();

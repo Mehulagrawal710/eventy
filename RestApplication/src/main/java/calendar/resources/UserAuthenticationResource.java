@@ -70,7 +70,7 @@ public class UserAuthenticationResource {
 
 	@POST
 	@Path("/signup")
-	@Produces(MediaType.TEXT_PLAIN)
+	@Produces(MediaType.APPLICATION_JSON)
 	public Response signup(@QueryParam("username") String username, @QueryParam("password") String password,
 			@QueryParam("email") String email, @Context UriInfo uri) throws IOException {
 		if (username == null) {
@@ -86,10 +86,11 @@ public class UserAuthenticationResource {
 		session.beginTransaction();
 		User newUser = usersService.createNewUserUsingCredentials(username, password, email, session);
 		if (newUser != null) {
-			emailService.sendEmailVerification(username, email, newUser.getVerificationKey(), uri);
-			return Response.status(Status.CREATED).entity("Signup successfull").build();
+			System.out.println("sending response");
+			//emailService.sendEmailVerification(username, email, newUser.getVerificationKey(), uri);
+			return Response.status(Status.OK).entity("{\"message\": \"Signup successfull\"}").build();
 		} else {
-			return Response.status(Status.NOT_ACCEPTABLE).entity("This username is taken").build();
+			return Response.status(Status.NOT_ACCEPTABLE).entity("{\"message\": \"This username is taken\"}").build();
 		}
 	}
 
