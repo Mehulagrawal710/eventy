@@ -23,7 +23,7 @@ public class UsersDAO {
 		String username = newUser.getUsername();
 		String userQuery = "from users where username = '" + username + "'";
 		List<User> userList = session.createQuery(userQuery).getResultList();
-		if (userList.size() == 1) {
+		if (userList.size() != 0) {
 			return false;
 		} else {
 			session.save(newUser);

@@ -87,7 +87,7 @@ public class UserAuthenticationResource {
 		User newUser = usersService.createNewUserUsingCredentials(username, password, email, session);
 		if (newUser != null) {
 			System.out.println("sending response");
-			//emailService.sendEmailVerification(username, email, newUser.getVerificationKey(), uri);
+			emailService.sendEmailVerification(username, email, newUser.getVerificationKey(), uri);
 			return Response.status(Status.OK).entity("{\"message\": \"Signup successfull\"}").build();
 		} else {
 			return Response.status(Status.NOT_ACCEPTABLE).entity("{\"message\": \"This username is taken\"}").build();

@@ -101,7 +101,6 @@ public class EmailService {
 		} else {
 			content = content.replace("@lastupdated", lastUpdatedDatetime.toString());
 		}
-		System.out.println(content);
 		return content;
 	}
 
