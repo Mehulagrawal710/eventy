@@ -2,151 +2,137 @@
 <html>
 
 <head>
-<title>Calendar</title>
-<meta charset="utf-8">
-<!--Bootstrap-->
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet"
-	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-<link
-	href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css"
-	rel="stylesheet">
-<link rel="stylesheet"
-	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<script
-	src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script
-	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<script
-	src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
-<!--AngularJS-->
-<script
-	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+	<title>Eventy</title>
+	<meta charset="utf-8">
+	<!--Bootstrap-->
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
+	<!--AngularJS-->
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
 
 <style>
-body {
-	background-repeat: no-repeat;
-	background-size: 100% auto;
+
+body{background-repeat: no-repeat;
+	 background-size: 100% auto;}
+
+#heading{font-size: 80px;
+		 width: 300px;
+		 margin: 0 auto;
+		 color: #000; 
+		 font-family: freestyle script;}
+
+#calendar{background-color: rgba(0,0,0,0.5);
+		  color: #eee;
+		  padding: 20px;
+		  border: 5px solid #000;
+		  margin-top: -20px;
+		  border-radius: 20px;}
+
+.day{border: 0px solid black;
+	 border-radius: 10px;
+	 padding: 10px;
+	 height: 100px;
+	 width: 100px;
+	 float: left;}
+
+.title_prev_list::-webkit-scrollbar {
+    display: none;
 }
 
-#heading {
-	font-size: 80px;
-	width: 300px;
-	margin: 0 auto;
+.title_prev_list {
+	height: 61px;
+	margin-top: -6px;
+	margin-bottom: -9px;
+	overflow-y: scroll;
+    -ms-overflow-style: none;
+}
+
+.title_prev{
+	font-size: 70%;
+	border: 1px solid black;
+	font-family: sans-serif;
+	background-color: #add8e6;
 	color: #000;
-	font-family: freestyle script;
+	border-radius: 5px;
+	text-align: center;
+	padding: 0 2px;
 }
 
-#calendar {
-	background-color: rgba(0, 0, 0, 0.5);
-	color: #eee;
-	padding: 20px;
-	border: 5px solid #000;
-	border-radius: 20px;
-}
+.today{background-color: lightgreen;
+	   color: #000;}	  
 
-.day {
-	border: 0px solid black;
-	border-radius: 10px;
-	padding: 10px;
-	height: 100px;
-	width: 100px;
-	float: left;
-}
+.day:hover{background-color: powderblue;
+		   color: #000;}	  	
 
-.today {
-	background-color: lightgreen;
-	color: #000;
-}
+.event_hr{background-color: gray;
+	      height: 3px;
+	      border:0;
+	      margin-top: -5px;}
 
-.day:hover {
-	background-color: powderblue;
-	color: #000;
-}
+.event_hr_red{background-color: #dc3545;}
 
-.event_hr {
-	background-color: gray;
-	height: 3px;
-	border: 0;
-	margin-top: -5px;
-}
+.blackfade{height: 100vh;
+		   width: 100vw;
+		   position: fixed;
+		   top: 0;
+		   left: 0;
+		   transition: all 200ms ease-in-out;
+		   background-color: rgba(0,0,0,0.6);}
 
-.event_hr_green {
-	background-color: #dc3545;
-}
+.addevent{height: 0;
+		  width: 0;
+		  position: fixed;
+		  top:50%;
+		  left:50%;
+		  z-index: -1;
+		  transition: all 200ms ease-in-out;}
 
-.blackfade {
-	height: 100vh;
-	width: 100vw;
-	position: fixed;
-	top: 0;
-	left: 0;
-	transition: all 200ms ease-in-out;
-	background-color: rgba(0, 0, 0, 0.6);
-}
+.addevent_clicked{border-radius: 20px;
+		  height: 80%;
+		  width: 40%;
+		  position: fixed;
+		  top: 10%;
+		  left: 30%;
+		  z-index: 0;
+		  background-color: rgba(255,255,255,1);
+		  transform: translate(0,0);
+		  transition: all 200ms ease-in-out;}
 
-.addevent {
-	height: 0;
-	width: 0;
-	position: fixed;
-	top: 50%;
-	left: 50%;
-	z-index: -1;
-	transition: all 200ms ease-in-out;
-}
+.content{opacity: 0; 
+	  transition: all 100ms ease-in-out;}
+.content_clicked{opacity: 1;
+			  transition: all 500ms ease-in-out;}
 
-.addevent_clicked {
-	border-radius: 20px;
-	height: 80%;
-	width: 40%;
-	position: fixed;
-	top: 10%;
-	left: 30%;
-	z-index: 0;
-	background-color: rgba(255, 255, 255, 1);
-	transform: translate(0, 0);
-	transition: all 200ms ease-in-out;
-}
+td{padding: 5px;}
 
-.content {
-	opacity: 0;
-	transition: all 100ms ease-in-out;
-}
-
-.content_clicked {
-	opacity: 1;
-	transition: all 500ms ease-in-out;
-}
 </style>
 
 </head>
 
-<body ng-app="myApp"
-	ng-style="{'background-image': 'url(' + months[current_month].bgimg + ')'}"
-	ng-controller="ctrl">
+<body ng-app="myApp" ng-style="{'background-image': 'url(' + months[current_month].bgimg + ')'}" ng-controller="ctrl">
 
 	<div align="center" id="heading" style="color: white;">Eventy</div>
-	<img ng-if="loadAnim"
-		style="position: fixed; width: 30%; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10;"
-		src="https://flevix.com/wp-content/uploads/2019/07/Bubble-Preloader-1.gif">
-	<button ng-click="" style="margin-left: 100px; margin-top: -120px;"
-		class="btn btn-md btn-primary">API Reference</button>
-	<button ng-show="loggedIn.login==false" ng-click="show_login_page()"
-		style="float: right; margin-top: -70px; margin-right: 170px;"
-		class="btn btn-md btn-primary">Login/Signup</button>
-	<button ng-show="loggedIn.login==true" ng-click="logout()"
-		style="float: right; margin-top: -70px; margin-right: 170px;"
-		class="btn btn-md btn-primary">Logout {{loggedIn.username}}</button>
-	<button ng-click="do()"
-		style="float: right; margin-right: 100px; margin-top: -70px;"
-		class="btn btn-md btn-primary">About</button>
+	<img ng-if="loadAnim" style="position: fixed;width: 30%;top: 50%;left:50%;transform: translate(-50%, -50%);z-index: 10;" src="https://flevix.com/wp-content/uploads/2019/07/Bubble-Preloader-1.gif">
+	<button ng-click="" style="margin-left: 100px;margin-top: -120px;" class="btn btn-md btn-primary">API Reference</button>
+	<button ng-show="loggedIn.login==false" ng-click="show_login_page()" style="float: right;margin-top: -70px;margin-right: 170px;" class="btn btn-md btn-primary">Login/Signup</button>
+	<button ng-show="loggedIn.login==true" ng-click="logout()" style="float: right;margin-top: -70px;margin-right: 170px;" class="btn btn-md btn-primary">Logout {{loggedIn.username}}</button>
+	<button ng-click="show_about_page()" style="float: right;margin-right: 100px;margin-top: -70px;" class="btn btn-md btn-primary">About</button>
+	
+	<div id="about" style="position: fixed;bottom: 0;left:50%;width: 20%;height: 30px;transform: translate(-50%); background-color: #fff;padding: 2px;text-align: center;font-size: 120%;border: 4px solid black;border-bottom: 0;">
+		<p><i class="fa fa-code"></i>&nbsp; with &nbsp;<i style="color: red;" class="fa fa-heart"></i>&nbsp; by &nbsp;
+		<a href="http://mehulagrawal710.me/" target="_blank">Mehul Agrawal</a></p>
+	</div>
 
 	<!--LOGIN/SIGNUP BOX
 		==================================================================-->
 	<div ng-class="{blackfade: open_login_page}">
 		<div class="addevent" ng-class="{addevent_clicked: open_login_page}">
-			<div class="container content"
-				ng-class="{content_clicked: open_login_page}">
+			<div class="container content" ng-class="{content_clicked: open_login_page}">
 				<ul class="nav nav-pills">
 					<li class="active"><a data-toggle="tab" href="#login">Login</a></li>
 					<li><a data-toggle="tab" href="#signup">Signup</a></li>
@@ -156,27 +142,30 @@ body {
 					<div id="login" class="tab-pane fade in active">
 						<h3>Login</h3>
 						<form name="loginForm" ng-submit="login(username, password);">
-							Username: <input name="username" ng-model="username" required><br>
-							Password: <input name="password" ng-model="password" required><br>
+							Username: <input name="username" ng-model="username" required style="border: 0;border-bottom: 2px solid lightblue;"><br>
+							<br>
+							Password: <input name="password" ng-model="password" required style="border: 0;border-bottom: 2px solid lightblue;"><br>
+							<br>
 							<button type="submit" class="btn btn-lg btn-success">Login</button>
 							<p style="color: red;">{{loginResponse}}</p>
 						</form>
 					</div>
 					<div id="signup" class="tab-pane fade">
 						<h3>SignUp</h3>
-						<form name="signupForm"
-							ng-submit="signup(username, password, email);">
-							Username: <input name="username" ng-model="username" required><br>
-							Password: <input name="password" ng-model="password" required><br>
-							Email: <input type="email" name="email" ng-model="email" required><br>
+						<form name="signupForm" ng-submit="signup(username, password, email);">
+							Username: <input name="username" ng-model="username" required style="border: 0;border-bottom: 2px solid lightblue;"><br>
+							<br>
+							Password: <input name="password" ng-model="password" required style="border: 0;border-bottom: 2px solid lightblue;"><br>
+							<br>
+							Email: <input type="email" name="email" ng-model="email" required style="border: 0;border-bottom: 2px solid lightblue;"><br>
+							<br>
 							<button type="submit" class="btn btn-lg btn-success">SignUp</button>
 							<p style="color: red;">{{signupResponse}}</p>
-						</form>
+						</form>	
 					</div>
 				</div>
-
-				<button ng-click="close_login_page()" style="margin-left: 20px;"
-					class="btn btn-lg btn-danger">close</button>
+				<br>
+				<button ng-click="close_login_page()" style="margin-left: 20px;" class="btn btn-lg btn-danger">close</button>
 			</div>
 		</div>
 	</div>
@@ -185,17 +174,14 @@ body {
 	<!--EMAIL VERIFICATION MESSAGE BOX
 		==================================================================-->
 	<div ng-class="{blackfade: open_verification_message_page}">
-		<div class="addevent"
-			ng-class="{addevent_clicked: open_verification_message_page}">
-			<div class="container content"
-				ng-class="{content_clicked: open_verification_message_page}">
-
-				<p>An email verification link has been sent on your provided
-					email address.</p>
+		<div class="addevent" ng-class="{addevent_clicked: open_verification_message_page}">
+			<div class="container content" ng-class="{content_clicked: open_verification_message_page}">
+				<br>
+				<br><br>
+				<p>An email verification link has been sent on your provided email address.</p>
 				<p>Click on the link to Activate your account</p>
-
-				<button ng-click="close_verification_message_page()"
-					style="margin-left: 20px;" class="btn btn-lg btn-primary">Okay</button>
+				<br><br>
+				<button ng-click="close_verification_message_page()" style="margin-left: 20px;" class="btn btn-lg btn-primary">Okay</button>
 			</div>
 		</div>
 	</div>
@@ -204,79 +190,75 @@ body {
 	<!--CALENDAR DATES SHOW UP HERE
 		==================================================================-->
 	<div class="container" id="calendar">
-
+		
 		<button ng-click="decrement_year()" class="btn btn-sm btn-info"><<</button>
 		<span>year</span>
 		<button ng-click="increment_year()" class="btn btn-sm btn-info">>></button>
-
+		
 		<button ng-click="decrement_month()" class="btn btn-sm btn-info"><<</button>
 		<span>month</span>
 		<button ng-click="increment_month()" class="btn btn-sm btn-info">>></button>
-		<button ng-click="show_all_event_page()" style="float: right;"
-			class="btn btn-md btn-success">all events</button>
-		<button ng-click="today()" style="float: right; margin-right: 5px;"
-			class="btn btn-md btn-success">today</button>
+		<button ng-click="show_all_event_page()" style="float: right;" class="btn btn-md btn-success">all events</button>
+		<button ng-click="today()" style="float: right;margin-right: 5px;" class="btn btn-md btn-success">today</button>
 		<h2>{{months[current_month].month}}, {{current_year}}</h2>
 		<hr>
 		<div>
 			<div ng-repeat="i in get_days_array(current_month)">
-				<div class="day" ng-click="day_click(i)"
-					ng-class="{today: i==current_date && current_month==month && current_year == year}">
-					<h3>{{i}}</h3>
-					<h4>{{weekdays[weekday(i)]}}</h4>
-					<!-- ---------------------------------------------------- -->
-					<div ng-show="event_exist(i)">
-						<div ng-repeat="e in events">
-							<span ng-if="e.date.year==current_year"> <span
-								ng-if="e.date.monthValue==current_month+1"> <span
-									ng-if="e.date.dayOfMonth==i"> {{e.title}} <br>
-								</span>
-							</span>
-							</span>
-						</div>
+				<div class="day" ng-click="day_click(i)" ng-class="{today: i==current_date && current_month==month && current_year == year}">
+					<div ng-show="!event_exist(i)">
+						<h3>{{i}}</h3>
+						<h4>{{weekdays[weekday(i)]}}</h4>
+						<hr class="event_hr">
 					</div>
-					<!-- ---------------------------------------------------- -->
-					<hr class="event_hr" ng-class="{event_hr_green: event_exist(i)}">
+					<div ng-show="event_exist(i)">
+						<div class="title_prev_list">
+							<div ng-repeat="e in events | orderBy: ['date.hour', 'date.minute']">
+								<span ng-if="e.date.year==current_year">
+									<span ng-if="e.date.monthValue==current_month+1">
+										<span ng-if="e.date.dayOfMonth==i">
+											<div class="title_prev" ng-if="e.title.length<=12">{{e.title}}</div>
+											<div class="title_prev" ng-if="e.title.length>12">{{e.title.slice(0, 10)}}..</div>
+										</span>
+									</span>
+								</span>
+							</div>
+						</div>
+						<h4>{{i}} {{weekdays[weekday(i)]}}</h4>
+						<hr class="event_hr event_hr_red">
+					</div>
 				</div>
 			</div>
 		</div>
-		<p style="margin-top: 100px; margin-bottom: -20px; float: right;">*click
-			on a date to add event</p>
+		<p style="margin-top: 100px;margin-bottom:-20px; float: right;">*click on a date to add event</p>
 	</div>
-	<!--========================================================================-->
-
+	<!--========================================================================-->	
+	
 	<!--NEW EVENTS ADD BOX
 		==================================================================-->
 	<div ng-class="{blackfade: open_add_event==1}">
 		<div class="addevent" ng-class="{addevent_clicked: open_add_event==1}">
-			<div class="container content"
-				ng-class="{content_clicked: open_add_event==1}">
-				<h2>Add Event for:</h2>
-				<h1>{{add_event_date}}</h1>
-				<br> <br>
-				<form
-					ng-submit="createEvent(title, description, add_event_date, time.getHours(), time.getMinutes(), getNotif, minBefore, notifMsg);">
-					Event Title: <input ng-model="title" required
-						style="border: 0; border-bottom: 2px solid lightblue;"><br>
-					Event Description: <input ng-model="description" required
-						style="border: 0; border-bottom: 2px solid lightblue;"><br>
-					Time: <input ng-model="time" type="time" placeholder="HH:mm"
-						required><br> <input ng-model="getNotif"
-						type="checkbox" ng-checked="false" ng-init="getNotif=false">
-					<label for="email-noti" class="form-check-label">Get Email
-						Notification</label>
+			<div class="container content" ng-class="{content_clicked: open_add_event==1}">
+				<h2>Add Event for: {{add_event_date}}</h2>
+				<button ng-click="close_add_event()" style="margin-left: 480px;margin-top: -90px;" class="btn btn-md btn-danger">&times;</button>
+				<br>
+				<form ng-submit="createEvent(title, description, add_event_date, time.getHours(), time.getMinutes(), getNotif, minBefore, notifMsg);">
+					Event Title: <input ng-model="title" required style="border: 0;border-bottom: 2px solid lightblue;"><br>
+					<br>
+					Event Description: <input ng-model="description" required style="border: 0;border-bottom: 2px solid lightblue;"><br>
+					<br>
+					Time: <input ng-model="time" type="time" placeholder="HH:mm" required><br>
+					<br>
+					<p>Select the notification option to specify time and get notified.</p>
+					<input ng-model="getNotif" type="checkbox" ng-checked="false" ng-init="getNotif=false">
+					<label for="email-noti" class="form-check-label">Get Email Notification</label>
 					<div ng-show="getNotif">
-						Time before to notify: <input ng-model="minBefore" type="number"
-							ng-init="minBefore=0"> min <br> Message for
-						yourself:
-						<textarea ng-model="notifMsg" type="text"
-							style="height: 50px; width: 150px;"></textarea>
+						Time before to notify: <input ng-model="minBefore" type="number" ng-init="minBefore=0"> min(s) <br>
+						<br>
+						Message for yourself: <textarea ng-model="notifMsg" type="text" style="height: 50px;width: 150px;"></textarea>
 					</div>
-					<button style="margin-left: 130px;" class="btn btn-lg btn-success">Add
-						Event</button>
+					<br><br>
+					<button type="submit" style="margin-left: 130px;" class="btn btn-lg btn-success">Add Event</button>
 				</form>
-				<button ng-click="close_add_event()" style="margin-left: 20px;"
-					class="btn btn-lg btn-danger">close</button>
 			</div>
 		</div>
 	</div>
@@ -285,111 +267,95 @@ body {
 	<!--UPDATE EVENTS BOX
 		==================================================================-->
 	<div ng-class="{blackfade: open_update_event_page==1}">
-		<div class="addevent"
-			ng-class="{addevent_clicked: open_update_event_page==1}">
-			<div class="container content"
-				ng-class="{content_clicked: open_update_event_page==1}">
-				<h2>Update Event:</h2>
-				<p style="color: grey;">Note: It is not possible to change the
-					timing of an event currently. If still you need to change the
-					timing, it is recommended to delete this event and create a new
-					one.</p>
-				<br> <br>
+		<div class="addevent" ng-class="{addevent_clicked: open_update_event_page==1}">
+			<div class="container content" ng-class="{content_clicked: open_update_event_page==1}">
+				<h3>Update Event:</h3>
+				<button ng-click="close_update_event_page()" style="margin-left: 480px;margin-top: -70px;" class="btn btn-md btn-danger">&times;</button>
+				<p style="color: grey;">
+					Note: It is not possible to change the timing of an event currently. If still you need to<br>
+					change the timing, it is recommended to delete this event and create a new one.
+				</p>
+				<br>
 				<form ng-submit="updateThisEvent();">
-					Event Title: <input ng-model="utitle" required
-						style="border: 0; border-bottom: 2px solid lightblue;"><br>
-					Event Description: <input ng-model="udescription" required
-						style="border: 0; border-bottom: 2px solid lightblue;"><br>
-
-					<input ng-model="ugetNotif" type="checkbox"> <label
-						class="form-check-label">Get Email Notification</label>
+					Event Title: <input ng-model="utitle" required style="border: 0;border-bottom: 2px solid lightblue;"><br>
+					<br>
+					Event Description: <input ng-model="udescription" required style="border: 0;border-bottom: 2px solid lightblue;"><br>
+					<br>
+					<input ng-model="ugetNotif" type="checkbox">
+					<label class="form-check-label">Get Email Notification</label>
 					<div ng-show="ugetNotif">
-						Time before to notify: <input ng-model="utimeBefore" type="number">
-						min <br> Message for yourself:
-						<textarea ng-model="unotifMsg" type="text"
-							style="height: 50px; width: 150px;"></textarea>
-						<p style="color: grey;">Note: If you turn off notification for
-							an event which was previously turned onn, the email notification
-							will still be delivered on the mentioned time.</p>
+						Time before to notify: <input ng-model="utimeBefore" type="number"> min(s) <br>
+						<br>
+						Message for yourself: <textarea ng-model="unotifMsg" type="text" style="height: 50px;width: 150px;"></textarea>
+						<p style="color: grey;">
+							Note: If you turn off notification for an event which was previously turned onn,<br>
+							the email notification will still be delivered on the mentioned time.
+						</p>
 					</div>
-					<button style="margin-left: 130px;" class="btn btn-lg btn-success">Update
-						Event</button>
+					<br>
+					<button style="margin-left: 130px;" class="btn btn-lg btn-success">Update Event</button>
 				</form>
-				<button ng-click="close_update_event_page()"
-					style="margin-left: 20px;" class="btn btn-lg btn-danger">close</button>
 			</div>
 		</div>
 	</div>
 	<!--========================================================================-->
-
+	
 	<!--PREVIEW EVENTS BOX
 		=======================================================================-->
 	<div ng-class="{blackfade: open_preview_event_page==1}">
-		<div class="addevent"
-			ng-class="{addevent_clicked: open_preview_event_page==1}">
-			<div class="container content"
-				ng-class="{content_clicked: open_preview_event_page==1}"
-				style="width: 500px; height: 480px; overflow-y: hidden; overflow-x: hidden;">
-				<span style="font-size: 40px; padding: 10px;">Added Events
-					for {{preview_event_date}}:</span>
-				<button ng-click="close_preview_event_page()"
-					class="btn btn-sm btn-danger"
-					style="margin: 15px 0 0 0; float: right;">&times;</button>
-				<button ng-click="add_event(preview_event_day)"
-					class="btn btn-sm btn-primary"
-					style="margin: 15px 0 0 0; float: right;">
-					<i class="fa fa-plus-circle"></i>
-				</button>
-				<center>
-					<p ng-if="events.length==0"
-						style="color: grey; font-size: 15px; font-family: Comic Sans MS;">
-						<i>No events Added...</i>
-					</p>
-				</center>
-				<div style="overflow-y: scroll; height: 400px; width: 107%;">
-					<div
-						ng-repeat="event in events | orderBy: ['date.year', 'date.monthValue', 'event.date.dayOfMonth', 'event.date.hour', 'event.date.minute'] : true">
-						<span ng-if="event.date.year==current_year"> <span
-							ng-if="event.date.monthValue==current_month+1"> <span
-								ng-if="event.date.dayOfMonth==preview_event_day"> <!-- <p>Event ID: {{event.eventId}}</p> -->
-									<p>
-										<b>Title: {{event.title}}</b>
-									</p>
-									<p>Description: {{event.description}}</p>
-									<p>Event Date:
-										{{event.date.dayOfMonth}}-{{event.date.monthValue}}-{{event.date.year}}</p>
-									<p>Event Time: {{event.date.hour}}:{{event.date.minute}}</p>
-									<p>Status: {{event.status}}</p>
-									<p ng-show="{{event.noOfTimesUpdated==0}}">Updated: Not
-										updated.</p>
-									<p ng-show="!{{event.noOfTimesUpdated==0}}">Updated:
-										{{event.noOfTimesUpdated}} time(s)</p>
-									<p ng-show="!{{event.noOfTimesUpdated==0}}">Last Updated
-										On: {{event.lastUpdatedDatetime}}</p>
-									<p ng-show="!{{event.notification.notifActive}}"
-										style="color: red;">No Notification Added</p>
-									<p ng-show="{{event.notification.notifActive}}"
-										style="color: lightgreen;">Notify
-										{{event.notification.timeBeforeToNotify/60}} min(s) before the
-										event.</p>
-									<p ng-show="{{event.notification.notifActive}}"
-										style="color: lightblue;">Message:
-										{{event.notification.notifMessage}}</p>
-									<button ng-click="deleteEvent(event.eventId)"
-										class="btn btn-sm btn-danger">
-										<i class="fa fa-trash"></i>
-									</button>
-									<button ng-click="updateEvent(event.eventId)"
-										class="btn btn-sm btn-warning">
-										<i class="fa fa-edit"></i>
-									</button> <br> <br> <br> <br>
-
+		<div class="addevent" ng-class="{addevent_clicked: open_preview_event_page==1}">
+			<div class="container content" ng-class="{content_clicked: open_preview_event_page==1}" style="width: 500px; height: 480px;overflow-y: hidden;overflow-x: hidden;">
+				<span style="font-size: 25px;padding: 10px;">Added Events for {{preview_event_date}}:</span>
+				<button ng-click="close_preview_event_page()" class="btn btn-sm btn-danger" style="margin:15px 0 0 0;float: right;">&times;</button>
+				<center><p ng-if="events.length==0" style="color: grey; font-size: 15px;font-family: Comic Sans MS;"><i>No events Added...</i></p></center>
+				<div style="overflow-y: scroll;height: 390px;width: 107%;">
+					<div ng-repeat="event in events | orderBy: ['date.hour', 'date.minute']">
+						<span ng-if="event.date.year==current_year">
+							<span ng-if="event.date.monthValue==current_month+1">
+								<span ng-if="event.date.dayOfMonth==preview_event_day">
+									<!-- <p>Event ID: {{event.eventId}}</p> -->
+									<table border="1" style="width:100%;text-align: center; border-collapse: collapse; border: 2px solid #eee;">
+									    <tr colspan="6">
+									        <td colspan="6"><h2>{{event.title}}</h2></td>
+									    </tr>
+									    <tr>
+									        <td colspan="2" style="width: 33%;">Date<br>{{event.date.dayOfMonth}}-{{event.date.monthValue}}-{{event.date.year}}</td>
+									        <td colspan="2" style="width: 33%;">Time<br>{{event.date.hour}}:{{event.date.minute}}</td>
+									        <td colspan="2" style="width: 33%;">Status<br>
+									        	<span style="color: lightgreen" ng-if="event.status=='upcoming'">{{event.status}}</span>
+									        	<span style="color: red" ng-if="event.status=='passed'">{{event.status}}</span>
+									        </td>
+									    </tr>
+									    <tr>
+									    	<td colspan="6">{{event.description}}</td>
+									    </tr>
+									    <tr ng-if="event.noOfTimesUpdated==0">
+									    	<td colspan="6">Update Info<br><i style="color: red;">Not Updated</i></td>
+									    </tr>    
+									    <tr ng-if="event.noOfTimesUpdated!=0">
+										    <td colspan="3">Updated<br>{{event.noOfTimesUpdated}} time(s)</td>
+										    <td colspan="3">Last Update<br>{{event.lastUpdatedDatetime.dayOfMonth}}-{{event.lastUpdatedDatetime.monthValue}}-{{event.lastUpdatedDatetime.year}} {{event.lastUpdatedDatetime.hour}}:{{event.lastUpdatedDatetime.minute}}</td>
+									    </tr>
+									    <tr ng-if="!event.notification.notifActive">
+									    	<td colspan="6">Notification Info<br><i style="color: red;">Notification turned off</i></td>
+									    </tr>
+									    <tr ng-if="event.notification.notifActive">
+										    <td colspan="3">Notify Before<br>{{event.notification.timeBeforeToNotify/60}} min(s)</td>
+										    <td colspan="3">Notification Message<br>{{event.notification.notifMessage}}</td>
+									    </tr>
+									    <tr>
+										    <td colspan="3"><button style="width: 100%;" ng-click="updateEvent(event.eventId)" class="btn btn-sm btn-warning"><i class="fa fa-edit"></i> Edit</button></td>
+										    <td colspan="3"><button style="width: 100%;" ng-click="deleteEvent(event.eventId)" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i> Delete</button></td>
+									    </tr>
+									</table>
+									<br><br>
+								</span>
 							</span>
 						</span>
-						</span>
-
+						
 					</div>
-				</div>
+				</div>	
+				<button ng-click="add_event(preview_event_day)" class="btn btn-sm btn-primary" style="margin:15px 0 0 0;float: right;"><i class="fa fa-plus-circle"></i> New Event</button>
 			</div>
 		</div>
 	</div>
@@ -399,63 +365,96 @@ body {
 		=======================================================================-->
 	<div ng-class="{blackfade: show_all_event==1}">
 		<div class="addevent" ng-class="{addevent_clicked: show_all_event==1}">
-			<div class="container content"
-				ng-class="{content_clicked: show_all_event==1}"
-				style="width: 500px; height: 480px; overflow-y: hidden; overflow-x: hidden;">
-				<span style="font-size: 40px; padding: 10px;">Added Events:</span>
-				<button ng-click="close_all_event_page()"
-					class="btn btn-sm btn-danger"
-					style="margin: 15px 0 0 0; float: right;">&times;</button>
-				<center>
-					<p ng-if="events.length==0"
-						style="color: grey; font-size: 15px; font-family: Comic Sans MS;">
-						<i>No events Added...</i>
-					</p>
-				</center>
-				<div style="overflow-y: scroll; height: 400px; width: 107%;">
-					<div
-						ng-repeat="event in events | orderBy: ['date.year', 'date.monthValue', 'event.date.dayOfMonth', 'event.date.hour', 'event.date.minute'] : true">
+			<div class="container content" ng-class="{content_clicked: show_all_event==1}" style="width: 500px; height: 480px;overflow-y: hidden;overflow-x: hidden;">
+				<span style="font-size: 40px;padding: 10px;">Added Events:</span>
+				<button ng-click="close_all_event_page()" class="btn btn-sm btn-danger" style="margin:15px 0 0 0;float: right;">&times;</button>
+				<center><p ng-if="events.length==0" style="color: grey; font-size: 15px;font-family: Comic Sans MS;"><i>No events Added...</i></p></center>
+				<div style="overflow-y: scroll;height: 400px;width: 107%;">
+					<div ng-repeat="event in events | orderBy: ['date.year', 'date.monthValue', 'date.dayOfMonth', 'date.hour', 'date.minute'] : true">
 						<!-- <p>Event ID: {{event.eventId}}</p> -->
-						<p>
-							<b>Title: {{event.title}}</b>
-						</p>
-						<p>Description: {{event.description}}</p>
-						<p>Event Date:
-							{{event.date.dayOfMonth}}-{{event.date.monthValue}}-{{event.date.year}}</p>
-						<p>Event Time: {{event.date.hour}}:{{event.date.minute}}</p>
-						<p>Status: {{event.status}}</p>
-						<p ng-show="{{event.noOfTimesUpdated==0}}">Updated: Not
-							updated.</p>
-						<p ng-show="!{{event.noOfTimesUpdated==0}}">Updated:
-							{{event.noOfTimesUpdated}} time(s)</p>
-						<p ng-show="!{{event.noOfTimesUpdated==0}}">Last Updated On:
-							{{event.lastUpdatedDatetime}}</p>
-						<p ng-show="!{{event.notification.notifActive}}"
-							style="color: red;">No Notification Added</p>
-						<p ng-show="{{event.notification.notifActive}}"
-							style="color: lightgreen;">Notify
-							{{event.notification.timeBeforeToNotify/60}} min(s) before the
-							event.</p>
-						<p ng-show="{{event.notification.notifActive}}"
-							style="color: lightblue;">Message:
-							{{event.notification.notifMessage}}</p>
-						<button ng-click="deleteEvent(event.eventId)"
-							class="btn btn-sm btn-danger">
-							<i class="fa fa-trash"></i>
-						</button>
-						<button ng-click="updateEvent(event.eventId)"
-							class="btn btn-sm btn-warning">
-							<i class="fa fa-edit"></i>
-						</button>
-						<br> <br> <br> <br>
+						<table border="1" style="width:100%;text-align: center; border-collapse: collapse; border: 2px solid #eee;">
+						    <tr colspan="6">
+						        <td colspan="6"><h2>{{event.title}}</h2></td>
+						    </tr>
+						    <tr>
+						        <td colspan="2" style="width: 33%;">Date<br>{{event.date.dayOfMonth}}-{{event.date.monthValue}}-{{event.date.year}}</td>
+						        <td colspan="2" style="width: 33%;">Time<br>{{event.date.hour}}:{{event.date.minute}}</td>
+						        <td colspan="2" style="width: 33%;">Status<br>
+						        	<span style="color: lightgreen" ng-if="event.status=='upcoming'">{{event.status}}</span>
+						        	<span style="color: red" ng-if="event.status=='passed'">{{event.status}}</span>
+						        </td>
+						    </tr>
+						    <tr>
+						    	<td colspan="6">{{event.description}}</td>
+						    </tr>
+						    <tr ng-if="event.noOfTimesUpdated==0">
+						    	<td colspan="6">Update Info<br><i style="color: red;">Not Updated</i></td>
+						    </tr>    
+						    <tr ng-if="event.noOfTimesUpdated!=0">
+							    <td colspan="3">Updated<br>{{event.noOfTimesUpdated}} time(s)</td>
+							    <td colspan="3">Last Update<br>{{event.lastUpdatedDatetime.dayOfMonth}}-{{event.lastUpdatedDatetime.monthValue}}-{{event.lastUpdatedDatetime.year}} {{event.lastUpdatedDatetime.hour}}:{{event.lastUpdatedDatetime.minute}}</td>
+						    </tr>
+						    <tr ng-if="!event.notification.notifActive">
+						    	<td colspan="6">Notification Info<br><i style="color: red;">Notification turned off</i></td>
+						    </tr>
+						    <tr ng-if="event.notification.notifActive">
+							    <td colspan="3">Notify Before<br>{{event.notification.timeBeforeToNotify/60}} min(s)</td>
+							    <td colspan="3">Notification Message<br>{{event.notification.notifMessage}}</td>
+						    </tr>
+						    <tr>
+							    <td colspan="3"><button style="width: 100%;" ng-click="updateEvent(event.eventId)" class="btn btn-sm btn-warning"><i class="fa fa-edit"></i> Edit</button></td>
+							    <td colspan="3"><button style="width: 100%;" ng-click="deleteEvent(event.eventId)" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i> Delete</button></td>
+						    </tr>
+						</table>
+						<br><br>
 					</div>
+				</div>	
+			</div>
+		</div>
+	</div>
+	<!--========================================================================-->
+
+	<!--ABOUT BOX
+		=======================================================================-->	
+	<div ng-class="{blackfade: open_about_page}">
+		<div class="addevent" ng-class="{addevent_clicked: open_about_page}" style="width: 70%;left: 50%;transform: translate(-50%);">
+			<div class="container content" ng-class="{content_clicked: open_about_page}">
+				<button ng-click="open_about_page = 0" class="btn btn-sm btn-danger" style="margin-left:900px;margin-top: 5px;">&times;</button>
+				<div style="border:0px solid black;width: 35%; height: 400px;margin-left: 50px;margin-top: 15px;padding: 10px;">
+					<center><h1>Eventy</h1><br><br></center>
+					<p style="text-align: justify;"><b>Calendar is a one stop solution for Users and Developers. Calendar Application comes with an interactive interface and notification system giving convenience to the users to easily manage their schedule. Calendar Application works by integrating with it's own REST API which is finely architectured and secured with a self developed token authentication system. The API endpoints are available for everyone's use, therefore creating a scheduling service alternative on top of which, developers can build there applications.</b></p>
+					<a href="https://github.com/Mehulagrawal710/eventy" target="_blank"><i class="fa fa-github"> Source Code</i></a>
+					
+					<a style="float: right;" href="" target="_blank">API Documentation</i></a>
+				</div>
+				<div style="border:0px solid black;width: 35%; height: 400px;margin-top: -400px;margin-left: 480px;padding: 10px;">
+					<center>
+						<h1>Developer</h1>
+						<br><br>
+						<img src="https://avatars1.githubusercontent.com/u/39669270?s=460&u=9d6beda80c4cac5896271f0f445162060d91a801&v=4" style="width: 40%;border-radius: 50%;">
+						<h2>Mehul Agrawal</h2>
+						<p style="font-size: 30px;">
+							<a href="https://github.com/Mehulagrawal710" target="_blank"><i class="fa fa-github"></i></a>
+							&nbsp;&nbsp;
+							<a href="http://mehulagrawal710.me/" target="_blank"><i class="fa fa-link"></i></a>
+						</p>
+					</center>
 				</div>
 			</div>
 		</div>
 	</div>
 	<!--========================================================================-->
 
-	<script>
+	<!--MESSAGE BOX
+		=======================================================================-->
+	<div ng-show="open_message_page" style="position: fixed;width: 40%;height: 100px;top: 50%;left: 50%;transform: translate(-50%,-50%);background-color: white;">
+		<center><h2 style="color: red;">{{message}}</h2>
+		<button ng-click="open_message_page=0" class="btn btn-sm btn-primary">Okay</button>
+		</center>
+	</div>
+	<!--========================================================================-->
+
+<script>
 var app = angular.module('myApp', []);
 app.controller('ctrl', function ($scope, $http, $location) {
 
@@ -552,12 +551,11 @@ app.controller('ctrl', function ($scope, $http, $location) {
 
     var event_date;
 
-    $scope.do = function(){
-    	console.log($scope.events);
-    }
 	
 	/*-----------------------DOMAIN------------------------*/
-	var domain = $location.absUrl() + "calendar/";
+	// var domain = $location.absUrl() + "calendar/";
+	// var domain = "http://localhost:8080/RestApplication/calendar/";
+	var domain = "https://eventyapp.herokuapp.com/calendar/"
 	
 
 	$scope.loadAnim = false;
@@ -568,6 +566,22 @@ app.controller('ctrl', function ($scope, $http, $location) {
 	$scope.stop_load_animation = function(){
 		$scope.loadAnim = false;		
 	}
+
+	/*---------------MESSAGE AND ABOUT PAGE----------------*/
+	$scope.open_message_page = 0;
+	$scope.message = null;
+
+	var give_login_prompt = function(){
+		$scope.message = "You need to Login/Signup first.";
+		$scope.open_message_page = 1;
+	}
+
+	$scope.open_about_page = 0;
+    $scope.show_about_page = function(){
+    	$scope.open_about_page = 1;
+    }
+
+    /*-----------------------------------------------------*/
 
 	/*-----------------LOGIN/SIGNUP------------------------*/
 	if(localStorage.getItem('loginInfo') === null) {
@@ -635,12 +649,14 @@ app.controller('ctrl', function ($scope, $http, $location) {
 	    	$scope.loggedIn.username = null;
 	    	$scope.loggedIn.token = null;
 	    	localStorage.removeItem('loginInfo');
+	    	$scope.events = null;
     	}
     	else if(window.confirm("Are you sure that you want to logout?")){
 	    	$scope.loggedIn.login = false;
 	    	$scope.loggedIn.username = null;
 	    	$scope.loggedIn.token = null;
 	    	localStorage.removeItem('loginInfo');
+	    	$scope.events = null;
     	}
     }
 
@@ -697,7 +713,11 @@ app.controller('ctrl', function ($scope, $http, $location) {
     $scope.show_all_event = 0;
 
     $scope.show_all_event_page = function(){
-    	$scope.show_all_event = 1;
+    	if($scope.loggedIn.login){
+    		$scope.show_all_event = 1;
+    	}else{
+    		give_login_prompt();
+    	}
     }
 
     $scope.close_all_event_page = function(){
@@ -729,12 +749,16 @@ app.controller('ctrl', function ($scope, $http, $location) {
 	}
 
 	$scope.day_click = function(date){
-    	if($scope.event_exist(date)){
-    		$scope.preview_event_day = date;
-    		$scope.preview_event_date = date+", "+$scope.months[$scope.current_month].month+", "+$scope.current_year;
-    		$scope.show_preview_event_page();
+    	if($scope.loggedIn.login){
+    		if($scope.event_exist(date)){
+	    		$scope.preview_event_day = date;
+	    		$scope.preview_event_date = date+", "+$scope.months[$scope.current_month].month+", "+$scope.current_year;
+	    		$scope.show_preview_event_page();
+	    	}else{
+	    		$scope.add_event(date);
+	    	}
     	}else{
-    		$scope.add_event(date);
+    		give_login_prompt();
     	}
     }
 
@@ -826,8 +850,8 @@ app.controller('ctrl', function ($scope, $http, $location) {
     	$scope.utitle = $scope.uevent.title;
     	$scope.udescription = $scope.uevent.description;
     	$scope.ugetNotif = $scope.uevent.notification.notifActive;
-    	$scope.utimeBefore = $scope.uevent.timeBeforeToNotify/60;
-    	$scope.unotifMsg = $scope.uevent.notifMessage;
+    	$scope.utimeBefore = $scope.uevent.notification.timeBeforeToNotify/60;
+    	$scope.unotifMsg = $scope.uevent.notification.notifMessage;
 
     	$scope.show_update_event_page();
 	}

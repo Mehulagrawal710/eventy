@@ -9,9 +9,14 @@
 		<property name="connection.driver_class">com.mysql.cj.jdbc.Driver</property>
 		<property name="dialect">org.hibernate.dialect.MySQLDialect</property>
 		<!-- Sample MySQL URL provided -->
-		<property name="connection.url">jdbc:mysql://localhost:3306/calendar</property>
+		
+		<!-- <property name="connection.url">jdbc:mysql://localhost:3306/calendar</property>
 		<property name="connection.username">root</property>
-		<property name="connection.password">schedule</property>
+		<property name="connection.password">schedule</property> -->
+		
+		<property name="connection.url">jdbc:mysql://remotemysql.com/P7rVqLdNIS</property>
+		<property name="connection.username">P7rVqLdNIS</property>
+		<property name="connection.password">PndEN574vR</property>
 
 		<!-- Show SQL on console -->
 		<property name="show_sql">true</property>

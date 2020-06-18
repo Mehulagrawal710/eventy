@@ -1,0 +1,3 @@
+heroku deployment war file:
+heroku war:deploy C:\Users\dell\Desktop\RestApplication.war --app eventyapp
+

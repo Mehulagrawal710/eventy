@@ -26,7 +26,6 @@ public class EmailService {
 
 	String senderName = "Eventy";
 	String senderEmail = "eventyapi@gmail.com";
-	String apiKey = "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";
 
 	public void scheduleNewNotification(Event newEvent, Session session) throws IOException {
 		User user = session.get(User.class, newEvent.getUserId());
@@ -67,7 +66,7 @@ public class EmailService {
 		content.setValue(htmlContent);
 		mail.addContent(content);
 		/*---------------------------------------------------------------*/
-		SendGrid sg = new SendGrid(apiKey);
+		SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
 		Request request = new Request();
 		try {
 			request.setMethod(Method.POST);
@@ -136,7 +135,7 @@ public class EmailService {
 		content.setValue(htmlContent);
 		mail.addContent(content);
 		/*---------------------------------------------------------------*/
-		SendGrid sg = new SendGrid(apiKey);
+		SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
 		Request request = new Request();
 		try {
 			request.setMethod(Method.POST);
@@ -215,7 +214,7 @@ public class EmailService {
 		content.setValue(htmlContent);
 		mail.addContent(content);
 		/*---------------------------------------------------------------*/
-		SendGrid sg = new SendGrid(apiKey);
+		SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
 		Request request = new Request();
 		try {
 			request.setMethod(Method.POST);
