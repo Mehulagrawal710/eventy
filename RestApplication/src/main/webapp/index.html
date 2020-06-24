@@ -118,7 +118,7 @@ td{padding: 5px;}
 
 	<div align="center" id="heading" style="color: white;">Eventy</div>
 	<img ng-if="loadAnim" style="position: fixed;width: 30%;top: 50%;left:50%;transform: translate(-50%, -50%);z-index: 10;" src="https://flevix.com/wp-content/uploads/2019/07/Bubble-Preloader-1.gif">
-	<button ng-click="" style="margin-left: 100px;margin-top: -120px;" class="btn btn-md btn-primary">API Reference</button>
+	<a href="https://documenter.getpostman.com/view/7982251/Szzn7xBM" target="_blank"><button style="margin-left: 100px;margin-top: -120px;" class="btn btn-md btn-primary">API Reference</button></a>
 	<button ng-show="loggedIn.login==false" ng-click="show_login_page()" style="float: right;margin-top: -70px;margin-right: 170px;" class="btn btn-md btn-primary">Login/Signup</button>
 	<button ng-show="loggedIn.login==true" ng-click="logout()" style="float: right;margin-top: -70px;margin-right: 170px;" class="btn btn-md btn-primary">Logout {{loggedIn.username}}</button>
 	<button ng-click="show_about_page()" style="float: right;margin-right: 100px;margin-top: -70px;" class="btn btn-md btn-primary">About</button>
@@ -422,11 +422,12 @@ td{padding: 5px;}
 				<button ng-click="open_about_page = 0" class="btn btn-sm btn-danger" style="margin-left:900px;margin-top: 5px;">&times;</button>
 				<div style="border:0px solid black;width: 35%; height: 400px;margin-left: 50px;margin-top: 15px;padding: 10px;">
 					<center><h1>Eventy</h1><br><br></center>
-					<p style="text-align: justify;"><b>Calendar is a one stop solution for Users and Developers. Calendar Application comes with an interactive interface and notification system giving convenience to the users to easily manage their schedule. Calendar Application works by integrating with it's own REST API which is finely architectured and secured with a self developed token authentication system. The API endpoints are available for everyone's use, therefore creating a scheduling service alternative on top of which, developers can build there applications.</b></p>
+					<p style="text-align: justify;"><b>Calendar is a one stop solution for Users and Developers. Calendar Application comes with an interactive interface and email notification system giving convenience to the users to easily manage their schedule. Eventy Application works by integrating with it's own REST API which is finely architectured and secured with a self developed token authentication system. The API endpoints are available for everyone's use, therefore creating a scheduling service alternative on top of which, developers can build there applications.</b></p>
 					<a href="https://github.com/Mehulagrawal710/eventy" target="_blank"><i class="fa fa-github"> Source Code</i></a>
 					
-					<a style="float: right;" href="" target="_blank">API Documentation</i></a>
+					<a style="float: right;" href="https://documenter.getpostman.com/view/7982251/Szzn7xBM" target="_blank">API Documentation</i></a>
 				</div>
+
 				<div style="border:0px solid black;width: 35%; height: 400px;margin-top: -400px;margin-left: 480px;padding: 10px;">
 					<center>
 						<h1>Developer</h1>
@@ -457,6 +458,12 @@ td{padding: 5px;}
 <script>
 var app = angular.module('myApp', []);
 app.controller('ctrl', function ($scope, $http, $location) {
+
+	/*------------------Only Desktop View------------------------*/
+	if(window.innerWidth<1000){
+		window.alert("The UI for this application is currently designed for only desktop dimensions and would look shattered when opened on small dimension screen. Please use a desktop for accessing this application.")
+	}
+	/*-----------------------------------------------------------*/
 
 	date = new Date();
 	$scope.current_date = date.getDate();
