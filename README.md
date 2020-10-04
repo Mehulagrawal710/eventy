@@ -36,8 +36,6 @@ The API seeks user authentication with a self developed token authentication sys
 
 406 - Not Acceptable
 
-### Rate limit
-There is NO limit put by the application on the number of requests sent. But the rate of incoming requests is monitored and limited by the third party hosting servive Heroku, so user may get a "Server not responding" response message if requests are sent too frequently.
 
 <h2>Technologies Used:</h2>
 <img src="https://cdn-images-1.medium.com/max/1600/1*J_-vtvcqV1-v14WqkPWhiQ.png" width="75" height="75" alt="ANGULAR">
